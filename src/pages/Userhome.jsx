@@ -23,7 +23,7 @@ const Userhome = () => {
           </div>
           <Header />
           < div className='grid-item3 tw-overflow-y-auto '>
-             <Feeds/>
+             <Feeds/> 
           </div>
         </div>
       }

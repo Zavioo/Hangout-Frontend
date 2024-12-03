@@ -16,9 +16,9 @@ const Addpost = () => {
                 <div className="card-body">
                     <div>
                         <h6 className=' tw-mb-3 '> Create Post  </h6>
-                        <input class="form-control form-control-sm " type="text" placeholder=" Title " id="inputSmall" />
+                        <input className="form-control form-control-sm " type="text" placeholder=" Title " id="inputSmall" />
 
-                        <textarea class="form-control my-3" id="exampleTextarea" placeholder=" What's on your mind " rows="3" style={{ height: "83px;" }} ></textarea>
+                        <textarea className="form-control my-3" id="exampleTextarea" placeholder=" What's on your mind " rows="3" style={{ height: "83px" }} ></textarea>
 
                         <label>
                             <input type="file" style={{ display: "none" }} />
@@ -51,9 +51,9 @@ const Addpost = () => {
                 </Modal.Header>
                 <Modal.Body>
                     <div>
-                        <input class="form-control form-control-sm " type="text" placeholder=" Title " id="inputSmall" />
+                        <input className="form-control form-control-sm " type="text" placeholder=" Title " id="inputSmall" />
 
-                        <textarea class="form-control my-3" id="exampleTextarea" placeholder=" What's on your mind " rows="3" style={{ height: "200px;" }} ></textarea>
+                        <textarea className="form-control my-3" id="exampleTextarea" placeholder=" What's on your mind " rows="3" style={{ height: "200px" }} ></textarea>
 
                         <label>
                             <input type="file" style={{ display: "none" }} />

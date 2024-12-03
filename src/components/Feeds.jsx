@@ -16,7 +16,6 @@ const Feeds = () => {
                 sharedState != 'Initial State' &&
                 <Addpost/>
             }
-             
            <PostCards/>
            <PostCards/>
            <PostCards/>

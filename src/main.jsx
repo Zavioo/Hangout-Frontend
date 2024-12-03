@@ -4,11 +4,15 @@ import './index.css'
 import App from './App.jsx'
 import { BrowserRouter } from 'react-router-dom'
 import './bootstrap.min.css'
+import ContextApi from './ContextApi/StateContext.jsx'
 
 createRoot(document.getElementById('root')).render(
+
   <StrictMode>
-    <BrowserRouter>
-    <App />
-    </BrowserRouter>
+    <ContextApi>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </ContextApi>
   </StrictMode>,
 )

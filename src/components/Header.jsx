@@ -8,7 +8,7 @@ const Header = () => {
 
   const { sharedState, setSharedState } = useContext(StateContext);
   
-  const [activeTab, setActiveTab] = useState('events')
+  const [activeTab, setActiveTab] = useState('All')
   const handleTabChange = (tab) => {
     setActiveTab(tab)
   }
@@ -25,7 +25,7 @@ const Header = () => {
 
         <div className={  sharedState === 'Initial State' ? "tw-flex tw-justify-evenly tw-mt-2" : "  tw-w-3/4 tw-flex tw-justify-evenly " }  >
 
-          <button  className=" tw-font-bold "  onClick={() => handleTabChange('events')}><Link className=  {activeTab === 'events' ? 'tw-text-black text-decoration-none  ' : 'hover:tw-text-black tw-text-slate-500 text-decoration-none '}> Events </Link>
+          <button  className=" tw-font-bold "  onClick={() => handleTabChange('All')}><Link className=  {activeTab === 'All' ? 'tw-text-black text-decoration-none  ' : 'hover:tw-text-black tw-text-slate-500 text-decoration-none '}> All </Link>
           </button>
           <button className=" tw-font-bold "  onClick={() => handleTabChange('photos')} ><Link className={activeTab === 'photos' ? 'tw-text-black text-decoration-none   ' : 'hover:tw-text-black tw-text-slate-500 text-decoration-none'} > Photos </Link>
           </button>
@@ -49,7 +49,7 @@ const Header = () => {
          <button onClick={()=>setSharedState('Updated State')} className="tw-mr-10"> <img style={{ width: "50px", height: "50px" }} className=" rounded" src=" https://avatarfiles.alphacoders.com/375/thumb-350-375330.webp" alt="Profilepic" /> </button>
         </div>
         : 
-        <button onClick={()=>setSharedState('Initial State')}   type="button" class="btn btn-outline-dark">Back</button>
+        <button onClick={()=>setSharedState('Initial State')}   type="button" className="btn btn-outline-dark">Back</button>
         }
       </div>
     </>

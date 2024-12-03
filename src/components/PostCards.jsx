@@ -17,6 +17,7 @@ const PostCards = () => {
                 <div className=' tw-my-3 tw-flex tw-flex-col tw-items-center ' >
 
                     <Link><img className={sharedState === 'Initial State' ? " rounded tw-max-h-72" : "rounded tw-max-h-48 "} src=" https://avatarfiles.alphacoders.com/375/thumb-350-375330.webp" alt="Profilepic" /></Link>
+                    
                 </div>
 
                 <h6 className=" text-dark my-3 " > Heading </h6>
