@@ -8,7 +8,7 @@ const PostCards = () => {
     const { sharedState } = useContext(StateContext);
 
     return (
-        <div className={sharedState === 'Initial State' ? "card tw-max-w-sm tw-max-h-max " : "card tw-max-w-xs tw-max-h-fit "} >
+        <div className={sharedState === 'Initial State' ? "card tw-max-w-sm tw-max-h-max tw-m-5 " : "card tw-max-w-xs tw-max-h-fit "} >
             <div className="card-body">
 
                 <div className=' d-flex '> <Link><img style={{ width: "40px", height: "40px" }} className=" rounded" src=" https://avatarfiles.alphacoders.com/375/thumb-350-375330.webp" alt="Profilepic" /></Link>
@@ -17,7 +17,7 @@ const PostCards = () => {
                 <div className=' tw-my-3 tw-flex tw-flex-col tw-items-center ' >
 
                     <Link><img className={sharedState === 'Initial State' ? " rounded tw-max-h-72" : "rounded tw-max-h-48 "} src=" https://avatarfiles.alphacoders.com/375/thumb-350-375330.webp" alt="Profilepic" /></Link>
-                    
+
                 </div>
 
                 <h6 className=" text-dark my-3 " > Heading </h6>
@@ -31,7 +31,7 @@ const PostCards = () => {
                     :
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="tw-size-6">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
-                </svg>}
+                    </svg>}
             </div>
         </div>
     )

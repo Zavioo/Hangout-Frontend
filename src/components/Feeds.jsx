@@ -1,28 +1,38 @@
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
-import { StateContext } from '../ContextApi/StateContext';
+import { ActiveTabContext, StateContext } from '../ContextApi/StateContext';
 import Addpost from './Addpost';
 import PostCards from './PostCards';
+import PhotoCards from './PhotoCards';
+import VideoCards from './VideoCards';
 
 const Feeds = () => {
 
     const { sharedState } = useContext(StateContext);
-
+    const { activeTab } = useContext(ActiveTabContext)
+    console.log(sharedState);
+    
     return (
 
-        <div className={sharedState === 'Initial State' ? " tw-p-5 tw-flex tw-gap-10 tw-flex-grow tw-flex-wrap tw-justify-center tw-self-auto " : " tw-p-5 tw-flex tw-gap-7 tw-flex-wrap tw-justify-around "} >
+        <div className={sharedState === 'Initial State' ? 
+        " tw-flex tw-flex-wrap tw-justify-center " 
+        : 
+        " tw-p-5 tw-flex tw-gap-7 tw-flex-wrap tw-justify-evenly "} >
+        
 
             {
                 sharedState != 'Initial State' &&
-                <Addpost/>
+                <Addpost />
             }
-           <PostCards/>
-           <PostCards/>
-           <PostCards/>
-           <PostCards/>
-           <PostCards/>
+            {activeTab === 'all' ?
+                <PostCards /> : activeTab === 'photos' ?
+                    <PhotoCards /> : activeTab === 'videos' &&
+                    <VideoCards />
 
-        </div>
+            }
+
+        
+         </div>
     )
 }
 
