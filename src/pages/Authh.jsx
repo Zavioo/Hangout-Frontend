@@ -2,11 +2,12 @@ import React, { useState } from 'react'
 import login from '../assets/authimg/login.png'
 import register from '../assets/authimg/register.png'
 import { Link, useNavigate } from 'react-router-dom'
-import { registerAPI } from '../Services/allApi'
-
+import { loginAPI, registerAPI } from '../Services/allApi'
 
 
 const Authh = ({ insideRegister }) => {
+
+    const [isLoged, setIsLoged] = useState(false)
 
     const navigate = useNavigate()
 
@@ -28,7 +29,7 @@ const Authh = ({ insideRegister }) => {
                 const result = await registerAPI(inputData)
                 if (result.status == 200) {
                     alert(`Welcome ${result.data.name}, Please Login to explore our website`)
-                    navigate('/userhome')
+                    navigate('/login')
                     setInputData({ username: "", name: "", email: "", password: "" })
                 } else {
                     if (result.response.status == 406) {
@@ -45,14 +46,27 @@ const Authh = ({ insideRegister }) => {
         }
     }
 
-    const handleLogin = async () => {
-
+    const handleLogin = async (e) => {
+        e.preventDefault()
         if (inputData.email && inputData.password) {
-
             // alert('Make Api Call')
-
-            
-
+            try {
+                const result = await loginAPI(inputData)
+                if (result.status == 200) {
+                    sessionStorage.setItem("user", JSON.stringify(result.data.user))
+                    sessionStorage.setItem("token", result.data.token)
+                    setIsLoged(true)
+                    setTimeout(() => {
+                        setInputData({ username: "", name: "", email: "", password: "" })
+                        navigate('/userhome')
+                        setIsLoged(false)
+                    }, 2000)
+                } else {
+                    alert(result.response.data)
+                }
+            } catch (error) {
+                console.log(error);
+            }
         } else {
             alert('Please Fill All Fields')
         }
