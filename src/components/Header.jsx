@@ -7,11 +7,9 @@ import { ActiveTabContext, StateContext } from "../ContextApi/StateContext"
 const Header = () => {
 
   const { sharedState, setSharedState } = useContext(StateContext);
-  const {activeTab, setActiveTab} = useContext(ActiveTabContext)
+  const { activeTab, setActiveTab } = useContext(ActiveTabContext)
 
   const handleTabChange = (tab) => setActiveTab(tab)
-
-
 
   return (
     <>
