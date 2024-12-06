@@ -6,3 +6,5 @@ export const registerAPI = async (reqBody) => {
     return await commonApi("POST", `${SERVER_URL}/register`, reqBody)
 }
 
+
+

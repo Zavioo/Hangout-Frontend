@@ -45,10 +45,13 @@ const Authh = ({ insideRegister }) => {
         }
     }
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
 
         if (inputData.email && inputData.password) {
-            alert('Make Api Call')
+
+            // alert('Make Api Call')
+
+            
 
         } else {
             alert('Please Fill All Fields')
