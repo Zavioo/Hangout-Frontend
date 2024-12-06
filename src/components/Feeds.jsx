@@ -15,7 +15,7 @@ const Feeds = () => {
     return (
 
         <div className={sharedState === 'Initial State' ? 
-        " tw-flex tw-flex-wrap tw-justify-center " 
+        " tw-flex tw-flex-wrap gap-10 tw-justify-center " 
         : 
         " tw-p-5 tw-flex tw-gap-7 tw-flex-wrap tw-justify-evenly "} >
         
