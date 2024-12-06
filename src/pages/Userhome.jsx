@@ -1,6 +1,5 @@
 import React, { useContext } from 'react'
 import Header from '../components/Header'
-import { Link } from 'react-router-dom'
 import Profile from '../components/Profile'
 import { ActiveTabContext, StateContext } from '../ContextApi/StateContext'
 import Feeds from '../components/Feeds'
