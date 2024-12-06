@@ -48,7 +48,7 @@ const Header = () => {
             <button onClick={() => setSharedState('Updated State')} className="tw-mr-10"> <img style={{ width: "50px", height: "50px" }} className=" rounded" src=" https://avatarfiles.alphacoders.com/375/thumb-350-375330.webp" alt="Profilepic" /> </button>
           </div>
           :
-          <button onClick={() => setSharedState('Initial State')} type="button" class="btn btn-outline-dark">Back</button>
+          <button onClick={() => setSharedState('Initial State')} type="button" className="btn btn-outline-dark">Back</button>
         }
       </div>
     </>
