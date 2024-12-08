@@ -16,30 +16,31 @@ const Addpost = () => {
 
     useEffect(() => {
         if (postDetails.postImg.type == 'image/png' || postDetails.postImg.type == 'image/jpeg' || postDetails.postImg.type == 'image/jpg') {
-            setPostDetails({ ...postDetails, postVideo: "" })
             setImageFileStatue(true)
             // createURL method is used to convert file type to url here URL is js class 
             setPreview(URL.createObjectURL(postDetails.postImg))
+            console.log('Inside img useEffect if true');
 
         } else {
             setImageFileStatue(false)
             setPreview("")
             setPostDetails({ ...postDetails, postImg: "" })
+            console.log('Inside img useEffect if false');
+            
         }
     }, [postDetails.postImg])
 
 
     useEffect(() => {
         if (postDetails.postVideo.type == 'video/mp4' || postDetails.postVideo.type == 'video/x-matroska') {
-            setPostDetails({ ...postDetails, postImg: "" })
             setImageFileStatue(true)
             // createURL method is used to convert file type to url here URL is js class 
             setPreview(URL.createObjectURL(postDetails.postVideo))
             setIsVideo(true)
             console.log('Inside Video useEffect if true');
 
-
         } else {
+            setIsVideo(false)
             setImageFileStatue(false)
             setPreview("")
             setPostDetails({ ...postDetails, postVideo: "" })
@@ -49,7 +50,13 @@ const Addpost = () => {
 
     const handleShow = () => setShow(true)
     const handleClose = () => setShow(false)
-
+    const handleClear = () =>{ setPostDetails({ ...postDetails, title: "", description: "", postImg: "", postVideo: "" })
+    console.log(postDetails);
+    
+}
+     
+   
+    
     return (
         <>       {/* Add new add post layout */}
             <div className="card tw-max-w-xs tw-max-h-min  p-3" >
@@ -100,7 +107,7 @@ const Addpost = () => {
                             </svg>
                         </span>
                         {/* clear button */}
-                        <button className=' btn btn-sm btn-outline-dark tw-ml-2'><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="tw-size-4">
+                        <button onClick={handleClear} className=' btn btn-sm btn-outline-dark tw-ml-2'><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="tw-size-4">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
                         </svg>
                         </button>
