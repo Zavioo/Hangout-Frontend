@@ -13,7 +13,7 @@ const PostCards = () => {
     const { sharedState } = useContext(StateContext);
 
     return (
-        <div className={sharedState === 'Initial State' ? "card tw-max-w-sm tw-max-h-max tw-m-5 " : "card tw-max-w-xs tw-max-h-fit "} >
+        <div className={sharedState === 'Initial State' ? "card tw-max-w-sm tw-max-h-max tw-mx-5 tw-mb-5 " : "card tw-max-w-xs tw-max-h-fit "} >
             <div className="card-body">
 
                 <div className=' d-flex '> <Link><img style={{ width: "40px", height: "40px" }} className=" rounded" src=" https://avatarfiles.alphacoders.com/375/thumb-350-375330.webp" alt="Profilepic" /></Link>

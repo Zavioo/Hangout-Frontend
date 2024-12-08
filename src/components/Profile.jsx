@@ -1,10 +1,26 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Modal } from 'react-bootstrap';
 import { Link } from 'react-router-dom'
 
 const Profile = () => {
 
+  const [username, setUsername] = useState("")
+  const [name , setName] = useState("")
   const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    if (sessionStorage.getItem("user")) {
+      setUsername(JSON.parse(sessionStorage.getItem("user")).username)
+      setName(JSON.parse(sessionStorage.getItem("user")).name.split(" ")[0])
+
+    } else {
+      setUsername("")
+      setName("")
+
+    }
+  }, [])
+
+  
 
   const handleShow = () => setShow(true)
   const handleClose = () => setShow(false)
@@ -13,9 +29,9 @@ const Profile = () => {
 
     <div className='tw-flex tw-flex-col tw-items-center '>
       {/* Profile Component */}
-      <img style={{ width: "150px", height: "150px" }} className=" rounded" src=" https://avatarfiles.alphacoders.com/375/thumb-350-375330.webp" alt="Profilepic" />
-      <h2 className='tw-mb-1 '>name</h2>
-      <p className=' tw-mb-1 '>userName</p>
+      <img style={{ width: "150px", height: "150px" }} className=" rounded tw-mb-2" src=" https://avatarfiles.alphacoders.com/375/thumb-350-375330.webp" alt="Profilepic" />
+      <h2 className='tw-mb-1 '>{name}</h2>
+      <p className=' tw-mb-1 '>{username}</p>
       <p className=' tw-mb-1 '> <span className=' tw-font-semibold tw-text-black ' >560</span> Post &nbsp; &nbsp; <span className=' tw-font-semibold tw-text-black '> 22k </span> Friends </p>
       <div className=' tw-w-full tw-mb-4 tw-mt-3 tw-flex tw-justify-center tw-items-center'>
         {/* Edit Button */}
@@ -64,7 +80,7 @@ const Profile = () => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="primary" onClick={handleClose}>
-            Add 
+            Add
           </Button>
           <Button variant="secondary" onClick={handleClose}>
             Close
