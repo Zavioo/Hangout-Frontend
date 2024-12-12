@@ -17,4 +17,8 @@ export const updateUserAPI = async (reqBody, reqHeader) => {
     return await commonApi("PUT", `${SERVER_URL}/edit-user`, reqBody, reqHeader)
 }
 
+export const addPostAPI = async (reqBody, reqHeader) => {
+    return await commonApi("POST", `${SERVER_URL}/add-post`, reqBody, reqHeader)
+}
+
 

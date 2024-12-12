@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Button, Modal } from 'react-bootstrap';
-import sim from '../assets/simp1.jpg'
+import { addPostAPI } from '../Services/allApi';
 
 
 const Addpost = () => {
@@ -8,63 +8,89 @@ const Addpost = () => {
     const [show, setShow] = useState(false);
     const [preview, setPreview] = useState("")
     const [imageFileStatus, setImageFileStatue] = useState(false)
+    const fileInputRef = useRef(null); // Ref for the file input
     const [isVideo, setIsVideo] = useState(false)
+    const user = JSON.parse(sessionStorage.getItem("user"))
     const [postDetails, setPostDetails] = useState({
-        username: "", profileImg: "", title: "", description: "", postImg: "", postVideo: ""
+        username: user.username, profileImg: user.profilePic, title: "", description: "", media: ""
     })// for storing postDetails
 
 
     useEffect(() => {
 
-        if (postDetails.postImg.type == 'image/png' || postDetails.postImg.type == 'image/jpeg' || postDetails.postImg.type == 'image/jpg') {
+        if (postDetails.media.type == 'image/png' || postDetails.media.type == 'image/jpeg' || postDetails.media.type == 'image/jpg') {
             setImageFileStatue(true)
             // createURL method is used to convert file type to url here URL is js class 
-            setPreview(URL.createObjectURL(postDetails.postImg))
+            setPreview(URL.createObjectURL(postDetails.media))
             console.log('Inside img useEffect if true');
 
-        } else {
-            setImageFileStatue(false)
-            setPreview("")
-            setPostDetails({ ...postDetails, postImg: "" })
-            console.log('Inside img useEffect if false');
-
-        }
-
-    }, [postDetails.postImg])
-
-
-    useEffect(() => {
-        if (postDetails.postVideo.type == 'video/mp4' || postDetails.postVideo.type == 'video/x-matroska') {
+        } else if (postDetails.media.type == 'video/mp4' || postDetails.media.type == 'video/x-matroska') {
             setImageFileStatue(true)
             // createURL method is used to convert file type to url here URL is js class 
-            setPreview(URL.createObjectURL(postDetails.postVideo))
+            setPreview(URL.createObjectURL(postDetails.media))
             setIsVideo(true)
             console.log('Inside Video useEffect if true');
-
         } else {
             setIsVideo(false)
             setImageFileStatue(false)
             setPreview("")
             setPostDetails({ ...postDetails, postVideo: "" })
-            console.log('Inside Video useEffect if false');
-        }
-    }, [postDetails.postVideo])
+            console.log('Inside else if img and video is false ');
 
-    const handleAddPost = () => {
-        const { username, profileImg, title, description, postImg, postVideo } = postDetails
-        if (title && description && postImg || postVideo) {
-            alert("Make api call")
+        }
+    }, [postDetails.media])
+
+    
+    
+
+
+    const handleAddPost = async () => {
+        const { username, profileImg, title, description, media } = postDetails
+        
+        if (title && description && media) {
+            // alert("Make api call")
+            const reqBody = new FormData() // reqbody in formdata becuse its includes file
+            reqBody.append("username", username)
+            reqBody.append("profileImg", profileImg)
+            reqBody.append("title", title)
+            reqBody.append("description", description)
+            reqBody.append("media", media)
+            const token = sessionStorage.getItem("token")
+            if (token) {
+                const reqHeader = {
+                    "Content-Type": "multipart/form-data",
+                    "Authorization": `Bearer ${token}`
+                }
+                // make api call
+                try {
+                    const result = await addPostAPI(reqBody, reqHeader)
+                    if (result.status == 200) {
+                        alert("Post added successfully!!!")
+                        setAddProjectResponse(result)
+                        handleClose()
+                    } else {
+                        alert(result.response.data)
+                    }
+
+                } catch (err) {
+                    console.log(err);
+
+                }
+            }
+
+
         } else {
             alert("Plzz add all fields")
         }
     }
 
+
     const handleShow = () => setShow(true)
     const handleClose = () => setShow(false)
     const handleClear = () => {
-        setPostDetails({ ...postDetails, title: "", description: "", postImg: "", postVideo: "" })
+        setPostDetails({ ...postDetails, title: "", description: "", media: "" })
         console.log(postDetails);
-
+        if (fileInputRef.current) fileInputRef.current.value = ""; // Reset file input
     }
 
 
@@ -88,22 +114,24 @@ const Addpost = () => {
                     <div className='tw-flex tw-items-center tw-justify-center' >
                         {/* add Image Button  */}
                         <label>
-                            <input onChange={(e) => setPostDetails({ ...postDetails, postImg: e.target.files[0] })} type="file" style={{ display: "none" }} />
+                            <input ref={fileInputRef} // Attach ref here 
+                                onChange={(e) => setPostDetails({ ...postDetails, media: e.target.files[0] })} type="file" style={{ display: "none" }} />
                             <span className="btn btn-sm btn-outline-dark tw-ml-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="tw-size-4">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
                                 </svg>
                             </span>
-                        </label>
-                        {/* add Video Button  */}
-                        <label>
-                            <input onChange={(e) => setPostDetails({ ...postDetails, postVideo: e.target.files[0] })} type="file" style={{ display: "none" }} />
+
+                            {/* add Video Button  */}
+
+
                             <span className="btn btn-sm tw-ml-2 btn-outline-dark">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="tw-size-4">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" />
                                 </svg>
                             </span>
                         </label>
+
                         {/* expand button */}
                         <span className=' btn btn-sm btn-outline-dark tw-ml-2' onClick={handleShow} >
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="tw-size-4">
