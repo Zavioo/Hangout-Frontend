@@ -1,37 +1,110 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Modal } from 'react-bootstrap';
 import { Link } from 'react-router-dom'
+import { updateUserAPI } from '../Services/allApi';
+import userPic from '../assets/user.jpg'
+import SERVER_URL from '../Services/serverURL';
+
+
+
 
 const Profile = () => {
 
-  const [username, setUsername] = useState("")
-  const [name , setName] = useState("")
+  const [preview, setPreview] = useState("")
+  const [existingProfileImg, setExistingProfileImg] = useState("")
+  const [userDetails, setUserDetails] = useState({
+    username: "", name: "", email: "", password: "", profilePic: "", about: ""
+  })
+
   const [show, setShow] = useState(false);
+
 
   useEffect(() => {
     if (sessionStorage.getItem("user")) {
-      setUsername(JSON.parse(sessionStorage.getItem("user")).username)
-      setName(JSON.parse(sessionStorage.getItem("user")).name.split(" ")[0])
-
-    } else {
-      setUsername("")
-      setName("")
-
+      const user = JSON.parse(sessionStorage.getItem("user"))
+      setUserDetails({
+        ...userDetails, username: user.username, name: user.name, email: user.email, password: user.password, about: user.about
+      })
+      setExistingProfileImg(user.profilePic)
     }
   }, [])
 
-  
+  useEffect(() => {
+    if (userDetails.profilePic) {
+
+      setPreview(URL.createObjectURL(userDetails.profilePic))
+
+    } else {
+      setPreview("")
+    }
+  }, [userDetails.profilePic])
+
 
   const handleShow = () => setShow(true)
-  const handleClose = () => setShow(false)
+  const handleClose = () => {
+    const user = JSON.parse(sessionStorage.getItem("user"))
+    setUserDetails({
+      ...userDetails, username: user.username, name: user.name, email: user.email, password: user.password, about: user.about
+    })
+    setExistingProfileImg(user.profilePic)
+    setPreview("")
+    setShow(false)
+  }
+
+  console.log(existingProfileImg);
+
+
+  const handleUpdateProfile = async () => {
+
+    const { username, name, email, password, profilePic, about } = userDetails
+    if (name && about) {
+      const reqBody = new FormData()
+      reqBody.append("username", username)
+      reqBody.append("name", name)
+      reqBody.append("email", email)
+      reqBody.append("password", password)
+      preview ? reqBody.append("profilePic", profilePic) : reqBody.append("profilePic", existingProfileImg)
+      reqBody.append("about", about)
+      const token = sessionStorage.getItem("token")
+      if (token) {
+        const reqHeader = {
+          "Content-Type": "multipart/form-data",
+          "Authorization": `Bearer ${token}`
+        }
+        // api call
+        try {
+          const result = await updateUserAPI(reqBody, reqHeader)
+          if (result.status == 200) {
+            alert("User Profile update successfully!!!")
+            sessionStorage.setItem("user", JSON.stringify(result.data))
+            setShow(false)
+          } else {
+            console.log(result);
+
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    } else {
+      alert("Please fill the form completely!!!")
+    }
+  }
+
 
   return (
 
     <div className='tw-flex tw-flex-col tw-items-center '>
       {/* Profile Component */}
-      <img style={{ width: "150px", height: "150px" }} className=" rounded tw-mb-2" src=" https://avatarfiles.alphacoders.com/375/thumb-350-375330.webp" alt="Profilepic" />
-      <h2 className='tw-mb-1 '>{name}</h2>
-      <p className=' tw-mb-1 '>{username}</p>
+
+      {existingProfileImg == "" ?
+        <img style={{ width: "150px", height: "150px" }} className=" rounded tw-mb-2" src={preview ? preview : userPic} alt="Profilepic" />
+        :
+        <img style={{ width: "150px", height: "150px" }} className=" rounded tw-mb-2" src={preview ? preview : `${SERVER_URL}/uploads/${existingProfileImg}`} alt="Profilepic" />
+      }
+
+      <h2 className='tw-mb-1 '>{userDetails.name}</h2>
+      <p className=' tw-mb-1 '>{userDetails.username}</p>
       <p className=' tw-mb-1 '> <span className=' tw-font-semibold tw-text-black ' >560</span> Post &nbsp; &nbsp; <span className=' tw-font-semibold tw-text-black '> 22k </span> Friends </p>
       <div className=' tw-w-full tw-mb-4 tw-mt-3 tw-flex tw-justify-center tw-items-center'>
         {/* Edit Button */}
@@ -45,19 +118,22 @@ const Profile = () => {
         </svg>
         </button>
       </div>
-      {/* <div className='tw-h-8 tw-flex tw-justify-end'>
-                <button className='btn btn-primary'> Add </button>
-    
-                <Link>
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="tw-size-6 tw-text-black">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" />
-                  </svg>
-    
-                </Link>
-    
-              </div> */}
+
+      {
+        /* <div className='tw-h-8 tw-flex tw-justify-end'>
+                  <button className='btn btn-primary'> Add </button>
+      
+                  <Link>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="tw-size-6 tw-text-black">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" />
+                    </svg>
+      
+                  </Link>
+      
+                </div> */
+      }
       <h6 className='  tw-text-black '> About </h6>
-      <p> Lorem ipsum dolor sit amet consectetur </p>
+      <div className='tw-mb-4 tw-text-justify tw-max-w-72 tw-max-h-24 tw-overflow-y-auto'>{userDetails.about}</div>
       <h6 className='  tw-text-black tw-mb-4 ' >  Friends  </h6>
       <div className='  tw-w-full tw-h-52 tw-overflow-y-auto tw-flex-wrap tw-flex tw-gap-4 tw-items-start ' >
         {/*  to show frinds list */}
@@ -71,22 +147,26 @@ const Profile = () => {
         </Modal.Header>
         <Modal.Body className='tw-flex tw-flex-col tw-items-center'>
           <label>
-            <input type="file" style={{ display: "none" }} />
-            <img style={{ width: "150px", height: "150px" }} className=" rounded" src=" https://avatarfiles.alphacoders.com/375/thumb-350-375330.webp" alt="Profilepic" /></label>
 
-          <input className="form-control mt-3" type="text" name="" id="" placeholder='Name' />
-          <textarea className="form-control my-3" id="exampleTextarea" placeholder=" About " rows="3" style={{ height: "83px" }} ></textarea>
+            <input onChange={(e) => setUserDetails({ ...userDetails, profilePic: e.target.files[0] })} type="file" style={{ display: "none" }} />
+            {existingProfileImg == "" ?
+              <img style={{ width: "150px", height: "150px" }} className=" rounded tw-mb-2" src={preview ? preview : userPic} alt="Profilepic" />
+              :
+              <img style={{ width: "150px", height: "150px" }} className=" rounded tw-mb-2" src={preview ? preview : `${SERVER_URL}/uploads/${existingProfileImg}`} alt="Profilepic" />
+            }
+          </label>
+
+          <input value={userDetails.name} onChange={(e) => setUserDetails({ ...userDetails, name: e.target.value })} className="form-control mt-3" type="text" name="" id="" placeholder='Name' />
+          <textarea value={userDetails.about} onChange={(e) => setUserDetails({ ...userDetails, about: e.target.value })} className="form-control my-3" id="exampleTextarea" placeholder=" About " rows="3" style={{ height: "83px" }} ></textarea>
 
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="primary" onClick={handleClose}>
+          <Button variant="primary" onClick={handleUpdateProfile}>
             Add
           </Button>
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-
-
         </Modal.Footer>
       </Modal>
     </div>

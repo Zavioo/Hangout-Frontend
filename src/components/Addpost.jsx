@@ -15,6 +15,7 @@ const Addpost = () => {
 
 
     useEffect(() => {
+
         if (postDetails.postImg.type == 'image/png' || postDetails.postImg.type == 'image/jpeg' || postDetails.postImg.type == 'image/jpg') {
             setImageFileStatue(true)
             // createURL method is used to convert file type to url here URL is js class 
@@ -26,8 +27,9 @@ const Addpost = () => {
             setPreview("")
             setPostDetails({ ...postDetails, postImg: "" })
             console.log('Inside img useEffect if false');
-            
+
         }
+
     }, [postDetails.postImg])
 
 
@@ -48,15 +50,24 @@ const Addpost = () => {
         }
     }, [postDetails.postVideo])
 
+    const handleAddPost = () => {
+        const { username, profileImg, title, description, postImg, postVideo } = postDetails
+        if (title && description && postImg || postVideo) {
+            alert("Make api call")
+        } else {
+            alert("Plzz add all fields")
+        }
+    }
+
     const handleShow = () => setShow(true)
     const handleClose = () => setShow(false)
-    const handleClear = () =>{ setPostDetails({ ...postDetails, title: "", description: "", postImg: "", postVideo: "" })
-    console.log(postDetails);
-    
-}
-     
-   
-    
+    const handleClear = () => {
+        setPostDetails({ ...postDetails, title: "", description: "", postImg: "", postVideo: "" })
+        console.log(postDetails);
+
+    }
+
+
     return (
         <>       {/* Add new add post layout */}
             <div className="card tw-max-w-xs tw-max-h-min  p-3" >
@@ -101,11 +112,11 @@ const Addpost = () => {
                         </span>
 
                         {/* share button */}
-                        <span className=' btn btn-sm btn-outline-dark tw-ml-2' >
+                        <button onClick={handleAddPost} className=' btn btn-sm btn-outline-dark tw-ml-2' >
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="tw-size-4">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 8.25H7.5a2.25 2.25 0 0 0-2.25 2.25v9a2.25 2.25 0 0 0 2.25 2.25h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25H15m0-3-3-3m0 0-3 3m3-3V15" />
                             </svg>
-                        </span>
+                        </button>
                         {/* clear button */}
                         <button onClick={handleClear} className=' btn btn-sm btn-outline-dark tw-ml-2'><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="tw-size-4">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />

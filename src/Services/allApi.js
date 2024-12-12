@@ -12,4 +12,9 @@ export const loginAPI = async (reqBody) => {
 }
 
 
+// updateUserAPI called by profile component when user click update btn -  edit-user
+export const updateUserAPI = async (reqBody, reqHeader) => {
+    return await commonApi("PUT", `${SERVER_URL}/edit-user`, reqBody, reqHeader)
+}
+
 
