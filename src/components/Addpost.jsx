@@ -66,8 +66,9 @@ const Addpost = () => {
                     const result = await addPostAPI(reqBody, reqHeader)
                     if (result.status == 200) {
                         alert("Post added successfully!!!")
-                        setAddProjectResponse(result)
-                        handleClose()
+                        
+                        handleClear()
+                        
                     } else {
                         alert(result.response.data)
                     }
