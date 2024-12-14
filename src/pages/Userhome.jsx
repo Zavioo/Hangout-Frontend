@@ -8,7 +8,8 @@ import Feeds from '../components/Feeds'
 const Userhome = () => {
 
   const { sharedState } = useContext(StateContext);
-  const { activeTab } = useContext(ActiveTabContext);
+  
+  
 
   return (
 
@@ -16,7 +17,7 @@ const Userhome = () => {
       {sharedState === 'Initial State' ?
         <div className=' tw-h-auto ' style={{ backgroundColor: "rgb(243, 243, 243)" }}>
           <Header />
-          <Feeds />
+          <Feeds /> 
         </div>
         : sharedState === 'Updated State' && <div className=' grid-container ' >
           <div className='grid-item1 '>

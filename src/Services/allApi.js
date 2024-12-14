@@ -17,8 +17,13 @@ export const updateUserAPI = async (reqBody, reqHeader) => {
     return await commonApi("PUT", `${SERVER_URL}/edit-user`, reqBody, reqHeader)
 }
 
+// api called by add post component
 export const addPostAPI = async (reqBody, reqHeader) => {
     return await commonApi("POST", `${SERVER_URL}/add-post`, reqBody, reqHeader)
+}
+
+export const allPostAPI = async () => {
+    return await commonApi("GET", `${SERVER_URL}/all-posts`, {})
 }
 
 

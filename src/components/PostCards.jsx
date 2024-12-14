@@ -1,47 +1,59 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { StateContext } from '../ContextApi/StateContext'
 import { Button, Modal } from 'react-bootstrap'
+import SERVER_URL from '../Services/serverURL'
 
 
-const PostCards = () => {
+
+const PostCards = (post) => {
+
     const [show, setShow] = useState(false);
+    const { sharedState } = useContext(StateContext);
+
+
 
     const handleShow = () => setShow(true)
     const handleClose = () => setShow(false)
 
-    const { sharedState } = useContext(StateContext);
+    console.log(post);
 
     return (
+
         <div className={sharedState === 'Initial State' ? "card tw-max-w-sm tw-max-h-max tw-mx-5 tw-mb-5 " : "card tw-max-w-xs tw-max-h-fit "} >
+
             <div className="card-body">
 
-                <div className=' d-flex '> <Link><img style={{ width: "40px", height: "40px" }} className=" rounded" src=" https://avatarfiles.alphacoders.com/375/thumb-350-375330.webp" alt="Profilepic" /></Link>
-                    <h5 className=" text-dark m-3 ">UserName</h5>
+                <div className=' d-flex '> <Link><img style={{ width: "40px", height: "40px" }} className=" rounded" src={`${SERVER_URL}/uploads/${post.values.profileImg}`} alt="Profilepic" /></Link>
+                    <h5 className=" text-dark m-3 ">{post.values.username}</h5>
                 </div>
                 <div className=' tw-my-3 tw-flex tw-flex-col tw-items-center ' >
-
-                    <Link><img className={sharedState === 'Initial State' ? " rounded tw-max-h-72" : "rounded tw-max-h-48 "} src=" https://avatarfiles.alphacoders.com/375/thumb-350-375330.webp" alt="Profilepic" /></Link>
-
+                    {
+                        post.values.media.split(".")[1] !== "mp4" || " mkv " ?
+                        <img className={sharedState === 'Initial State' ? " rounded tw-max-h-72" : "rounded tw-max-h-48 "} src={`${SERVER_URL}/uploads/${post.values.media}`} alt="Profilepic" />
+                            :
+                            <video src={`${SERVER_URL}/uploads/${post.values.media}`}></video>
+                            
+                    }
                 </div>
 
-                <h6 className=" text-dark my-3 " > Heading </h6>
-                <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quo eos porro nostrum tempore totam asperiores voluptatum... {sharedState === 'Initial State' && <Link onClick={handleShow} className=''>
+                <h6 className=" text-dark my-3 " > {post.values.title} </h6>
+                <p> {post.values.description}  {sharedState === 'Initial State' && <Link onClick={handleShow} >
                     Read More</Link>}</p>
 
                 {sharedState !== 'Initial State' ?
-                   <div>
+                    <div>
                         <button onClick={handleShow} className='mx-3'> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="tw-size-6 tw-text-black">
                             <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                         </svg>
                         </button>
                         <button >
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="tw-size-6 ">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                          </svg>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                            </svg>
                         </button>
-                   </div>
-                  
+                    </div>
+
                     :
 
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="tw-size-6">
