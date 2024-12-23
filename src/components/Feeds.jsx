@@ -1,63 +1,40 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { ActiveTabContext, AllPosts, StateContext } from '../ContextApi/StateContext';
+import React, { useContext, useEffect, useState } from 'react';
+import { StateContext } from '../ContextApi/StateContext';
 import Addpost from './Addpost';
 import PostCards from './PostCards';
-import PhotoCards from './PhotoCards';
-import VideoCards from './VideoCards';
-import { allPostAPI } from '../Services/allApi'
-
+import { allPostAPI } from '../Services/allApi';
 
 const Feeds = () => {
     const { sharedState } = useContext(StateContext);
-    const { activeTab } = useContext(ActiveTabContext)
-    const [allPosts, setAllPosts] = useState([])
+    const [allPosts, setAllPosts] = useState([]);
 
     useEffect(() => {
-        addPost()
-    }, [])
+        fetchPosts();
+    }, []);
 
-    const addPost = async () => {
+    const fetchPosts = async () => {
         try {
-            const result = await allPostAPI()
-            // console.log(result);
-            if (result.status == 200) {
-                setAllPosts(result.data)
+            const result = await allPostAPI();
+            if (result.status === 200) {
+                setAllPosts(result.data);
             }
-
         } catch (err) {
-            console.log((err));
+            console.error('Error fetching posts:', err);
         }
-    }
-    console.log(allPosts);
+    };
 
     return (
-
-        <div className={sharedState === 'Initial State' ?
-            " tw-flex tw-flex-wrap gap-10 tw-justify-center "
-            :
-            " tw-p-5 tw-flex tw-gap-7 tw-flex-wrap tw-justify-evenly "} >
-
-
-            {
-                sharedState != 'Initial State' &&
-                <Addpost />
-            }
-
-            {
-                allPosts?.length > 0 ?
-                    allPosts?.map(post => (
-                        activeTab === 'all' ?
-                            <PostCards values={post} />
-                            
-                            : activeTab === 'photos' ?
-                                <PhotoCards /> : activeTab === 'videos' &&
-                                <VideoCards />
-                    ))
-                    :
-                    <div> No post yet Added </div>
-            }
+        <div className={sharedState === 'Initial State' ? "tw-flex tw-flex-wrap gap-10 tw-justify-center" : "tw-p-5 tw-flex tw-gap-7 tw-flex-wrap tw-justify-evenly"}>
+            {sharedState !== 'Initial State' && <Addpost />}
+            {allPosts.length > 0 ? (
+                allPosts.map((post, index) => (
+                    <PostCards key={index} values={post} />
+                ))
+            ) : (
+                <div>No posts yet added</div>
+            )}
         </div>
-    )
-}
+    );
+};
 
-export default Feeds
+export default Feeds;
