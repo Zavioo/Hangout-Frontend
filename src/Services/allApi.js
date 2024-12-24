@@ -22,6 +22,7 @@ export const addPostAPI = async (reqBody, reqHeader) => {
     return await commonApi("POST", `${SERVER_URL}/add-post`, reqBody, reqHeader)
 }
 
+// api Called by Feeds Component 
 export const allPostAPI = async () => {
     return await commonApi("GET", `${SERVER_URL}/all-posts`, {})
 }

@@ -68,6 +68,7 @@ const Addpost = () => {
                         alert("Post added successfully!!!")
                         
                         handleClear()
+                        handleClose()
                         
                     } else {
                         alert(result.response.data)
@@ -88,11 +89,18 @@ const Addpost = () => {
 
     const handleShow = () => setShow(true)
     const handleClose = () => setShow(false)
+
     const handleClear = () => {
         setPostDetails({ ...postDetails, title: "", description: "", media: "" })
         console.log(postDetails);
         if (fileInputRef.current) fileInputRef.current.value = ""; // Reset file input
     }
+
+    const closeAndClear = ()=>{
+        handleClose()
+        handleClear()
+    }
+
 
 
     return (
@@ -108,7 +116,7 @@ const Addpost = () => {
                     <div className='tw-flex tw-flex-col tw-items-center tw-justify-center' >
 
                         <img src={preview} className='mb-3 tw-max-h-52 ' alt="" />
-                        {/* a video tag will be added */}
+                        
                         {isVideo && <video className='mb-3 tw-max-h-52' autoPlay src={preview} >  Your browser does not support videos </video>}
                     </div>
 
@@ -124,8 +132,6 @@ const Addpost = () => {
                             </span>
 
                             {/* add Video Button  */}
-
-
                             <span className="btn btn-sm tw-ml-2 btn-outline-dark">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="tw-size-4">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" />
@@ -165,30 +171,49 @@ const Addpost = () => {
                 </Modal.Header>
                 <Modal.Body>
                     <div>
-                        <input class="form-control form-control-sm " type="text" placeholder=" Title " id="inputSmall" />
+                        <input value={postDetails.title} onChange={(e) => setPostDetails({ ...postDetails, title: e.target.value })} class="form-control form-control-sm " type="text" placeholder=" Title " id="inputSmall" />
 
-                        <textarea class="form-control my-3" id="exampleTextarea" placeholder=" What's on your mind " rows="3" style={{ height: "200px;" }} ></textarea>
-
+                        <textarea value={postDetails.description} onChange={(e) => setPostDetails({ ...postDetails, description: e.target.value })} class="form-control my-3" id="exampleTextarea" placeholder=" What's on your mind " rows="3" style={{ height: "200px;" }} ></textarea>
+                         {/* preview of Upload image */}
+                       <div className='tw-flex tw-items-center tw-justify-center'>
+                            <img src={preview} className='mb-3 tw-max-h-52 ' alt="" />
+                            
+                            {isVideo && <video className='mb-3 tw-max-h-52' autoPlay src={preview} > Your browser does not support videos </video>}
+    
+                       </div>
+                        {/* add Image Button  */}
                         <label>
-                            <input type="file" style={{ display: "none" }} />
-                            <span className="btn btn-sm btn-outline-dark tw-ml-4"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="tw-size-6">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-                            </svg>
+                            <input ref={fileInputRef} // Attach ref here 
+                                onChange={(e) => setPostDetails({ ...postDetails, media: e.target.files[0] })} type="file" style={{ display: "none" }} />
+                            <span className="btn btn-sm btn-outline-dark tw-ml-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="tw-size-4">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                                </svg>
                             </span>
 
-                            <span className="btn btn-sm tw-ml-4 btn-outline-dark">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="tw-size-6">
+                            {/* add Video Button  */}
+                            <span className="btn btn-sm tw-ml-2 btn-outline-dark">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="tw-size-4">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" />
                                 </svg>
                             </span>
                         </label>
+                         {/* clear button */}
+                         <button onClick={handleClear} className=' btn btn-sm btn-outline-dark tw-ml-2'><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="tw-size-4">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                        </svg>
+                        </button>
+                        {!imageFileStatus &&
+                        <div className='tw-text-main tw-font-light tw-my-2 tw-text-center' > Upload jpeg , jpg , png images <br /> or <br />
+                            mp4 , mkv videos
+                        </div>}
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="primary" onClick={handleClose}>
+                    <Button variant="primary" onClick={handleAddPost}>
                         Share
                     </Button>
-                    <Button variant="secondary" onClick={handleClose}>
+                    <Button variant="secondary" onClick={closeAndClear}>
                         Close
                     </Button>
                 </Modal.Footer>
