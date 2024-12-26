@@ -2,7 +2,7 @@ import { useContext, useState } from "react"
 import { Link } from "react-router-dom"
 import { ActiveTabContext, StateContext } from "../ContextApi/StateContext"
 import SERVER_URL from "../Services/serverURL"
-
+import img from "../assets/user.jpg"
 
 
 const Header = () => {
@@ -12,6 +12,8 @@ const Header = () => {
 
   const handleTabChange = (tab) => setActiveTab(tab)
   const user = JSON.parse(sessionStorage.getItem("user"))
+
+  const profilePic = user.profilePic ? `${SERVER_URL}/uploads/${user.profilePic}` : img 
 
   return (
     <>
@@ -45,7 +47,7 @@ const Header = () => {
               <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
             </svg>
             </Link>
-            <button onClick={() => setSharedState('Updated State')} className="tw-mr-10"> <img style={{ width: "50px", height: "50px" }} className=" rounded" src={`${SERVER_URL}/uploads/${user.profilePic}`} alt="Profilepic" /> </button>
+            <button onClick={() => setSharedState('Updated State')} className="tw-mr-10"> <img style={{ width: "50px", height: "50px" }} className=" rounded" src={profilePic} alt="Profilepic" /> </button>
           </div>
           :
           <button onClick={() => setSharedState('Initial State')} type="button" className="btn btn-outline-dark">Back</button>

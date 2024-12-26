@@ -51,7 +51,7 @@ const Profile = () => {
     setShow(false)
   }
 
-  console.log(existingProfileImg);
+  // console.log(existingProfileImg);
 
 
   const handleUpdateProfile = async () => {

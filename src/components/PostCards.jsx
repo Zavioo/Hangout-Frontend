@@ -4,10 +4,13 @@ import { StateContext } from '../ContextApi/StateContext';
 import { Modal, Button } from 'react-bootstrap';
 import SERVER_URL from '../Services/serverURL';
 
+
 const PostCards = ({ values }) => {
     const [show, setShow] = useState(false);
     const { sharedState } = useContext(StateContext);
 
+    const profilePic = values.userId?.profilePic || 'user.jpg'
+    
     const handleShow = () => setShow(true);
     const handleClose = () => setShow(false);
 
@@ -21,7 +24,7 @@ const PostCards = ({ values }) => {
                         <img
                             style={{ width: "40px", height: "40px" }}
                             className="rounded"
-                            src={`${SERVER_URL}/uploads/${values.profileImg}`}
+                            src={`${SERVER_URL}/uploads/${profilePic}`}
                             alt="Profilepic"
                         />
                     </Link>

@@ -6,6 +6,7 @@ import { allPostAPI } from '../Services/allApi';
 import PhotoCards from './PhotoCards';
 import VideoCards from './VideoCards';
 
+
 const Feeds = () => {
     const { sharedState } = useContext(StateContext);
     const { activeTab } = useContext(ActiveTabContext);
