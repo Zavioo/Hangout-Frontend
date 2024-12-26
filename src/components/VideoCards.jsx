@@ -1,6 +1,4 @@
 import React, { useContext, useState } from 'react'
-import vid1 from '../assets/videos/vid1.mp4'
-import vid2 from '../assets/videos/vid2.mp4'
 import { Button, Modal } from 'react-bootstrap'
 import { StateContext } from '../ContextApi/StateContext'
 import SERVER_URL from '../Services/serverURL'
