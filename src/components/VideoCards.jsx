@@ -1,19 +1,24 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import vid1 from '../assets/videos/vid1.mp4'
 import vid2 from '../assets/videos/vid2.mp4'
 import { Button, Modal } from 'react-bootstrap'
+import { StateContext } from '../ContextApi/StateContext'
+import SERVER_URL from '../Services/serverURL'
 
-const VideoCards = () => {
+
+const VideoCards = ({values}) => {
   const [show, setShow] = useState(false);
+  const { sharedState } = useContext(StateContext);
+
 
   const handleShow = () => setShow(true)
   const handleClose = () => setShow(false)
 
   return (
-    <div className='tw-mx-7 tw-mb-7 hover:tw-'>
+    <div div className={sharedState === 'Initial State' ? " tw-max-w-sm tw-max-h-max tw-mx-5 tw-mb-5" : " tw-max-w-xs tw-max-h-fit"}>
       <Button onClick={handleShow} className='btn btn-light'>
         <video width="450" >
-          <source src={vid1} type="video/mp4" />
+          <source src={`${SERVER_URL}/uploads/${values.media}`} type="video/mp4" />
           Your browser does not support videos
         </video>
       </Button>
@@ -24,7 +29,7 @@ const VideoCards = () => {
         </Modal.Header>
         <Modal.Body>
           <video controls autoPlay >
-            <source src={vid1} type="video/mp4" />
+            <source src={`${SERVER_URL}/uploads/${values.media}`} type="video/mp4" />
             Your browser does not support videos
           </video>
         </Modal.Body>
