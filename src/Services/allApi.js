@@ -27,8 +27,14 @@ export const allPostAPI = async () => {
     return await commonApi("GET", `${SERVER_URL}/all-posts`, {})
 }
 
+// to edit posts called by EditPost Component
 export const updatePostAPI = async (id, reqBody, reqHeader) => {
     return await commonApi("PUT", `${SERVER_URL}/post/${id}/edit`, reqBody, reqHeader)
+}
+
+// userPostRemoveAPI called by removePost component when user click delete button
+export const userPostRemoveAPI =async(id,reqHeader)=>{
+    return await commonApi("DELETE",`${SERVER_URL}/post/${id}/remove`,{},reqHeader)
 }
 
 
