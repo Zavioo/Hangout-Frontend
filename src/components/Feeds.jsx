@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { ActiveTabContext, AddPostResponseContext, EditPostResponseContext, StateContext } from '../ContextApi/StateContext';
+import { ActiveTabContext, PostResponseContext,StateContext } from '../ContextApi/StateContext';
 import Addpost from './Addpost';
 import PostCards from './PostCards';
 import { allPostAPI } from '../Services/allApi';
@@ -8,8 +8,7 @@ import VideoCards from './VideoCards';
 
 
 const Feeds = () => {
-    const {addPostResponse} = useContext(AddPostResponseContext)
-    const { editPostResponse } = useContext(EditPostResponseContext);
+    const {postResponse} = useContext(PostResponseContext)
     const { sharedState } = useContext(StateContext);
     const { activeTab } = useContext(ActiveTabContext);
     const [allPosts, setAllPosts] = useState([]);
@@ -18,7 +17,7 @@ const Feeds = () => {
 
     useEffect(() => {
         fetchPosts();
-    }, [editPostResponse,addPostResponse]);
+    }, [postResponse]);
 
     const fetchPosts = async () => {
         try {

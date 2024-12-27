@@ -2,12 +2,12 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Button, Modal } from 'react-bootstrap';
 import SERVER_URL from '../Services/serverURL';
 import { updatePostAPI } from '../Services/allApi';
-import { EditPostResponseContext } from '../ContextApi/StateContext';
+import { PostResponseContext } from '../ContextApi/StateContext';
 
 
 const EditPost = ({ post }) => {
     // console.log(post);
-    const { setEditPostResponse } = useContext(EditPostResponseContext);
+    const { setPostResponse } = useContext(PostResponseContext);
     const [show, setShow] = useState(false);
     const [preview, setPreview] = useState("")
     // const [existingMedia, setExistingMedia] = useState()
@@ -64,7 +64,7 @@ const EditPost = ({ post }) => {
                     const result = await updatePostAPI(id, reqBody, reqHeader)
                     if (result.status == 200) {
                         alert("Post Update successfully!!!")
-                        setEditPostResponse(result)
+                        setPostResponse(result)
                         handleClose()
                     } else {
                         alert(result.response.data)

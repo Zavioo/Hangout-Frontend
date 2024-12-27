@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Button, Modal } from 'react-bootstrap';
 import { addPostAPI } from '../Services/allApi';
-import { AddPostResponseContext } from '../ContextApi/StateContext';
+import { PostResponseContext } from '../ContextApi/StateContext';
 
 const Addpost = () => {
 
-    const { setAddPostResponse } = useContext(AddPostResponseContext);
+    const { setPostResponse } = useContext(PostResponseContext);
     const [show, setShow] = useState(false);
     const [preview, setPreview] = useState("")
     const [imageFileStatus, setImageFileStatue] = useState(false)
@@ -67,7 +67,7 @@ const Addpost = () => {
                     const result = await addPostAPI(reqBody, reqHeader)
                     if (result.status == 200) {
                         alert("Post added successfully!!!")
-                        setAddPostResponse(result)
+                        setPostResponse(result)
                         handleClear()
                         handleClose()
                     } else {
