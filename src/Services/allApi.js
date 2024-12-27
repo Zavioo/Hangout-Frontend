@@ -27,4 +27,8 @@ export const allPostAPI = async () => {
     return await commonApi("GET", `${SERVER_URL}/all-posts`, {})
 }
 
+export const updatePostAPI = async (id, reqBody, reqHeader) => {
+    return await commonApi("PUT", `${SERVER_URL}/post/${id}/edit`, reqBody, reqHeader)
+}
+
 

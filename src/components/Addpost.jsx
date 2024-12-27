@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Button, Modal } from 'react-bootstrap';
 import { addPostAPI } from '../Services/allApi';
-
+import { AddPostResponseContext } from '../ContextApi/StateContext';
 
 const Addpost = () => {
 
+    const { setAddPostResponse } = useContext(AddPostResponseContext);
     const [show, setShow] = useState(false);
     const [preview, setPreview] = useState("")
     const [imageFileStatus, setImageFileStatue] = useState(false)
@@ -40,13 +41,13 @@ const Addpost = () => {
         }
     }, [postDetails.media])
 
-    
-    
+
+
 
 
     const handleAddPost = async () => {
         const { username, profileImg, title, description, media } = postDetails
-        
+
         if (title && description && media) {
             // alert("Make api call")
             const reqBody = new FormData() // reqbody in formdata becuse its includes file
@@ -66,21 +67,17 @@ const Addpost = () => {
                     const result = await addPostAPI(reqBody, reqHeader)
                     if (result.status == 200) {
                         alert("Post added successfully!!!")
-                        
+                        setAddPostResponse(result)
                         handleClear()
                         handleClose()
-                        
                     } else {
                         alert(result.response.data)
                     }
-
                 } catch (err) {
                     console.log(err);
 
                 }
             }
-
-
         } else {
             alert("Plzz add all fields")
         }
@@ -96,7 +93,7 @@ const Addpost = () => {
         if (fileInputRef.current) fileInputRef.current.value = ""; // Reset file input
     }
 
-    const closeAndClear = ()=>{
+    const closeAndClear = () => {
         handleClose()
         handleClear()
     }
@@ -116,7 +113,7 @@ const Addpost = () => {
                     <div className='tw-flex tw-flex-col tw-items-center tw-justify-center' >
 
                         <img src={preview} className='mb-3 tw-max-h-52 ' alt="" />
-                        
+
                         {isVideo && <video className='mb-3 tw-max-h-52' autoPlay src={preview} >  Your browser does not support videos </video>}
                     </div>
 
@@ -174,13 +171,13 @@ const Addpost = () => {
                         <input value={postDetails.title} onChange={(e) => setPostDetails({ ...postDetails, title: e.target.value })} class="form-control form-control-sm " type="text" placeholder=" Title " id="inputSmall" />
 
                         <textarea value={postDetails.description} onChange={(e) => setPostDetails({ ...postDetails, description: e.target.value })} class="form-control my-3" id="exampleTextarea" placeholder=" What's on your mind " rows="3" style={{ height: "200px;" }} ></textarea>
-                         {/* preview of Upload image */}
-                       <div className='tw-flex tw-items-center tw-justify-center'>
+                        {/* preview of Upload image */}
+                        <div className='tw-flex tw-items-center tw-justify-center'>
                             <img src={preview} className='mb-3 tw-max-h-52 ' alt="" />
-                            
+
                             {isVideo && <video className='mb-3 tw-max-h-52' autoPlay src={preview} > Your browser does not support videos </video>}
-    
-                       </div>
+
+                        </div>
                         {/* add Image Button  */}
                         <label>
                             <input ref={fileInputRef} // Attach ref here 
@@ -198,15 +195,15 @@ const Addpost = () => {
                                 </svg>
                             </span>
                         </label>
-                         {/* clear button */}
-                         <button onClick={handleClear} className=' btn btn-sm btn-outline-dark tw-ml-2'><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="tw-size-4">
+                        {/* clear button */}
+                        <button onClick={handleClear} className=' btn btn-sm btn-outline-dark tw-ml-2'><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="tw-size-4">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
                         </svg>
                         </button>
                         {!imageFileStatus &&
-                        <div className='tw-text-main tw-font-light tw-my-2 tw-text-center' > Upload jpeg , jpg , png images <br /> or <br />
-                            mp4 , mkv videos
-                        </div>}
+                            <div className='tw-text-main tw-font-light tw-my-2 tw-text-center' > Upload jpeg , jpg , png images <br /> or <br />
+                                mp4 , mkv videos
+                            </div>}
                     </div>
                 </Modal.Body>
                 <Modal.Footer>

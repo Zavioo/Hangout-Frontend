@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { ActiveTabContext, StateContext } from '../ContextApi/StateContext';
+import { ActiveTabContext, AddPostResponseContext, EditPostResponseContext, StateContext } from '../ContextApi/StateContext';
 import Addpost from './Addpost';
 import PostCards from './PostCards';
 import { allPostAPI } from '../Services/allApi';
@@ -8,6 +8,8 @@ import VideoCards from './VideoCards';
 
 
 const Feeds = () => {
+    const {addPostResponse} = useContext(AddPostResponseContext)
+    const { editPostResponse } = useContext(EditPostResponseContext);
     const { sharedState } = useContext(StateContext);
     const { activeTab } = useContext(ActiveTabContext);
     const [allPosts, setAllPosts] = useState([]);
@@ -16,7 +18,7 @@ const Feeds = () => {
 
     useEffect(() => {
         fetchPosts();
-    }, []);
+    }, [editPostResponse,addPostResponse]);
 
     const fetchPosts = async () => {
         try {
@@ -34,7 +36,7 @@ const Feeds = () => {
     };
 
     return (
-        <div className={sharedState === 'Initial State' ? "tw-flex tw-flex-wrap gap-10 tw-justify-center" : "tw-p-5 tw-flex tw-gap-7 tw-flex-wrap tw-justify-evenly"}>
+        <div className={sharedState === 'Initial State' ? "tw-flex tw-flex-wrap gap-10 tw-justify-items-start tw-justify-center " : "tw-p-5 tw-flex tw-gap-7 tw-flex-wrap tw-justify-evenly"}>
             {sharedState !== 'Initial State' && <Addpost />}
 
             {sharedState === 'Initial State' ?

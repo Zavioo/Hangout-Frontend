@@ -1,21 +1,21 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Button, Modal } from 'react-bootstrap';
 import SERVER_URL from '../Services/serverURL';
+import { updatePostAPI } from '../Services/allApi';
+import { EditPostResponseContext } from '../ContextApi/StateContext';
 
 
 const EditPost = ({ post }) => {
-    console.log(post);
-
+    // console.log(post);
+    const { setEditPostResponse } = useContext(EditPostResponseContext);
     const [show, setShow] = useState(false);
     const [preview, setPreview] = useState("")
     // const [existingMedia, setExistingMedia] = useState()
     const [imageFileStatus, setImageFileStatue] = useState(false)
     const fileInputRef = useRef(null); // Ref for the file input
     const [isVideo, setIsVideo] = useState(false)
-    const user = JSON.parse(sessionStorage.getItem("user"))
-
     const [postDetails, setPostDetails] = useState({
-        title: "", description: "", media: ""
+        id: post._id, username: post.username, title: post.title, description: post.description, media: ""
     })// for storing postDetails
 
     const mediaType = post.media.split('.').pop().toLowerCase(); //To Get file extension
@@ -44,43 +44,35 @@ const EditPost = ({ post }) => {
     }, [postDetails.media])
 
 
-    const handleAddPost = async () => {
-        const { username, profileImg, title, description, media } = postDetails
+    const handleUpdatePost = async () => {
+        const { id, username, title, description, media } = postDetails
 
-        if (title && description && media) {
+        if (title && description) {
             // alert("Make api call")
             const reqBody = new FormData() // reqbody in formdata becuse its includes file
             reqBody.append("username", username)
-            reqBody.append("profileImg", profileImg)
             reqBody.append("title", title)
             reqBody.append("description", description)
-            reqBody.append("media", media)
+            preview ? reqBody.append("media", media) : reqBody.append("media", post.media)
             const token = sessionStorage.getItem("token")
             if (token) {
                 const reqHeader = {
                     "Content-Type": "multipart/form-data",
                     "Authorization": `Bearer ${token}`
                 }
-                // make api call
                 try {
-                    const result = await addPostAPI(reqBody, reqHeader)
+                    const result = await updatePostAPI(id, reqBody, reqHeader)
                     if (result.status == 200) {
-                        alert("Post added successfully!!!")
-
-                        handleClear()
+                        alert("Post Update successfully!!!")
+                        setEditPostResponse(result)
                         handleClose()
-
                     } else {
                         alert(result.response.data)
                     }
-
                 } catch (err) {
                     console.log(err);
-
                 }
             }
-
-
         } else {
             alert("Plzz add all fields")
         }
@@ -88,11 +80,16 @@ const EditPost = ({ post }) => {
 
 
     const handleShow = () => setShow(true)
-    const handleClose = () => setShow(false)
+    const handleClose = () => {
+        setPostDetails({ ...postDetails, title: post.title, description: post.description, media: "" })
+        // console.log(postDetails);
+        if (fileInputRef.current) fileInputRef.current.value = ""; // Reset file input
+        setShow(false)
+    }
 
     const handleClear = () => {
-        setPostDetails({ ...postDetails, title: "", description: "", media: "" })
-        console.log(postDetails);
+        setPostDetails({ ...postDetails, title: post.title, description: post.description, media: "" })
+        // console.log(postDetails);
         if (fileInputRef.current) fileInputRef.current.value = ""; // Reset file input
     }
 
@@ -126,9 +123,9 @@ const EditPost = ({ post }) => {
                     <Modal.Title> Create Post </Modal.Title>
                 </Modal.Header>
                 <div className='m-3'>
-                    <input value={postDetails.title} onChange={(e) => setPostDetails({ ...postDetails, title: e.target.value })} class="form-control form-control-sm " type="text" placeholder=" Title " id="inputSmall" />
+                    <input value={postDetails.title} onChange={(e) => setPostDetails({ ...postDetails, title: e.target.value })} className="form-control form-control-sm " type="text" placeholder=" Title " id="inputSmall" />
 
-                    <textarea value={postDetails.description} onChange={(e) => setPostDetails({ ...postDetails, description: e.target.value })} class="form-control my-3" id="exampleTextarea" placeholder=" What's on your mind " rows="3" style={{ height: "200px;" }} ></textarea>
+                    <textarea value={postDetails.description} onChange={(e) => setPostDetails({ ...postDetails, description: e.target.value })} className="form-control my-3" id="exampleTextarea" placeholder=" What's on your mind " rows="3" style={{ height: "100px" }} ></textarea>
                     {/* preview of Upload image or Video */}
                     <div className='tw-flex tw-items-center tw-justify-center'>
 
@@ -169,7 +166,7 @@ const EditPost = ({ post }) => {
                         </div>}
                 </div>
                 <Modal.Footer>
-                    <Button variant="primary" >
+                    <Button variant="primary" onClick={handleUpdatePost}>
                         Share
                     </Button>
                     <Button variant="secondary" onClick={handleClose}>
