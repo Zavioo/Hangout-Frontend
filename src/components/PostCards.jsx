@@ -21,9 +21,9 @@ const PostCards = ({ values }) => {
 
 
     return (
-        <div className={sharedState === 'Initial State' ? "card tw-max-w-sm tw-max-h-max tw-mx-5 tw-mb-5" : "card tw-max-w-xs tw-max-h-fit"}>
+        <div className={sharedState === 'Initial State' ? "card tw-max-w-sm tw-max-h-max tw-m-5 tw-ml-8" : "card tw-max-w-xs tw-max-h-fit tw-m-5"}>
             <div className="card-body">
-                <div className="d-flex">
+                <div className="tw-flex tw-items-center">
                     <Link>
                         <img
                             style={{ width: "40px", height: "40px" }}
@@ -32,7 +32,7 @@ const PostCards = ({ values }) => {
                             alt="Profilepic"
                         />
                     </Link>
-                    <h5 className="text-dark m-3">{values.username}</h5>
+                    <h6 className="text-dark m-3">{values.username}</h6>
                 </div>
 
                 <div className="tw-my-3 tw-flex tw-flex-col tw-items-center">
@@ -51,12 +51,12 @@ const PostCards = ({ values }) => {
                     )}
                 </div>
 
-                <h6 className="text-dark my-3">{values.title}</h6>
-                <p>
+                <h5 className="text-dark my-3">{values.title}</h5>
+                <p className='tw-max-h-28 tw-overflow-hidden '>
                     {values.description}
-                    {sharedState === 'Initial State' &&
-                        <Link onClick={handleShow}>Read More</Link>}
                 </p>
+                {sharedState === 'Initial State' &&
+                        <Link className='tw-my-5' onClick={handleShow}>  Read More</Link>}
 
                 {sharedState !== 'Initial State' && (
                     <div>

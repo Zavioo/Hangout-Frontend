@@ -102,7 +102,7 @@ const Addpost = () => {
 
     return (
         <>       {/* Add new add post layout */}
-            <div className="card tw-max-w-xs tw-max-h-min  p-3" >
+            <div className="card tw-max-w-xs tw-max-h-min tw-m-2 p-3" >
                 <div className="card-body ">
 
                     <h6 className=' tw-mb-3 '> Create Post </h6>
