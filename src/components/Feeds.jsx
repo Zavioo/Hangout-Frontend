@@ -35,9 +35,8 @@ const Feeds = () => {
     };
 
     return (
-        <div className={sharedState === 'Initial State' ? "tw-flex tw-flex-wrap gap-10 tw-justify-items-start tw-justify-center " : "tw-p-5 tw-flex tw-gap-7 tw-flex-wrap tw-justify-evenly"}>
+        <div className= "tw-grid tw-grid-cols-3">
             {sharedState !== 'Initial State' && <Addpost />}
-
             {sharedState === 'Initial State' ?
                 allPosts.length > 0 ? (
                     allPosts.map((post, index) => {
