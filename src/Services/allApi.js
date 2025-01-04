@@ -37,6 +37,6 @@ export const userPostRemoveAPI =async(id,reqHeader)=>{
     return await commonApi("DELETE",`${SERVER_URL}/post/${id}/remove`,{},reqHeader)
 }
 
-export const likePostAPI = async (id, reqBody, reqHeader) => {
+export const updatelikeAPI = async (id, reqBody, reqHeader) => {
     return await commonApi("PUT", `${SERVER_URL}/post/${id}/like`, reqBody, reqHeader)
 }

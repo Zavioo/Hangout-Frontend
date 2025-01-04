@@ -10,7 +10,7 @@ import LikeButton from './LIkeButton';
 
 const PostCards = ({ values }) => {
     
-    console.log(values);
+     console.log(values);
     
     const [show, setShow] = useState(false);
     const { sharedState } = useContext(StateContext);
@@ -63,7 +63,7 @@ const PostCards = ({ values }) => {
                     </p>
                     {sharedState === 'Initial State' && 
                            <div className='tw-flex tw-justify-between tw-items-center' >
-                                <LikeButton posts={values} />
+                                <LikeButton postsId={values._id} likes={values.likes} />
                                 <Link className='tw-my-5' onClick={handleShow}>  Read More</Link>
                            </div>
                             }
