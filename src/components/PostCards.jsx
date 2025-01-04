@@ -9,6 +9,9 @@ import LikeButton from './LIkeButton';
 
 
 const PostCards = ({ values }) => {
+    
+     console.log(values);
+    
     const [show, setShow] = useState(false);
     const { sharedState } = useContext(StateContext);
 
@@ -20,6 +23,8 @@ const PostCards = ({ values }) => {
 
     const mediaType = values.media.split('.').pop().toLowerCase(); //To Get file extension
 
+    // console.log(values);
+    
 
     return (
         <div className={sharedState === 'Initial State' ? "card tw-max-w-sm tw-max-h-max tw-m-5 tw-ml-8" : "card tw-max-w-xs tw-max-h-fit tw-m-5"}>
@@ -58,7 +63,7 @@ const PostCards = ({ values }) => {
                     </p>
                     {sharedState === 'Initial State' && 
                            <div className='tw-flex tw-justify-between tw-items-center' >
-                                <LikeButton/>
+                                <LikeButton postsId={values._id} likes={values.likes} />
                                 <Link className='tw-my-5' onClick={handleShow}>  Read More</Link>
                            </div>
                             }
