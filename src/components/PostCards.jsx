@@ -6,7 +6,7 @@ import SERVER_URL from '../Services/serverURL';
 import EditPost from './EditPost';
 import RemovePost from './RemovePost';
 import LikeButton from './LIkeButton';
-
+import PostComments from './PostComments';
 
 const PostCards = ({ values }) => {
     
@@ -63,7 +63,12 @@ const PostCards = ({ values }) => {
                     </p>
                     {sharedState === 'Initial State' && 
                            <div className='tw-flex tw-justify-between tw-items-center' >
-                                <LikeButton postsId={values._id} likes={values.likes} />
+                            <div className='tw-flex'>
+                                
+                                    <LikeButton postsId={values._id} likes={values.likes} />
+                                    <PostComments/>
+    
+                            </div>
                                 <Link className='tw-my-5' onClick={handleShow}>  Read More</Link>
                            </div>
                             }
