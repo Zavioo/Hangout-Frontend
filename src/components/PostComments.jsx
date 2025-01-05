@@ -1,10 +1,64 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Modal } from 'react-bootstrap'
+import { addCommentAPI, removeCommentAPI } from '../Services/allApi'
+import { PostResponseContext } from '../ContextApi/StateContext';
+import SERVER_URL from '../Services/serverURL';
 
-const PostComments = () => {
+
+const PostComments = ({ postsId, commments }) => {
+    const [comment, setComment] = useState()
     const [show, setShow] = useState(false)
-    const handleClose = () => setShow(false)
+    const { setPostResponse } = useContext(PostResponseContext);
+    const user = JSON.parse(sessionStorage.getItem("user"));
+
+    const userId = user._id
+    const username = user.username
+    const userProfilePic = user.profilePic
+
+    const handleClose = () => {
+        setShow(false)
+        setComment("")
+    }
     const handleShow = () => setShow(true);
+
+    const handleAddComment = async (id) => {
+        if (comment) {
+            const token = sessionStorage.getItem("token")
+            if (token) {
+                const reqHeader = {
+                    "Authorization": `Bearer ${token}`
+                }
+                const reqBody = { userId, comment, username, userProfilePic }
+                try {
+                    const result = await addCommentAPI(id, reqBody, reqHeader);
+                    if (result.status === 200) {
+                        setPostResponse(result.data)
+                        setComment("")
+                    }
+                } catch (error) {
+                    console.error('Error adding comments:', error);
+                }
+            }
+        } else {
+            alert("Plz Write Somthing...!!! ")
+        }
+
+    }
+
+    const handleRemoveComment = async (id) => {
+        console.log(id);
+        const reqBody = { postId: postsId }
+        try {
+            const result = await removeCommentAPI(id, reqBody);
+            if (result.status === 200) {
+                setPostResponse(result.data)
+            }
+        } catch (error) {
+            console.error('Error adding comments:', error);
+        }
+        
+    }
+
     return (
         <div className=' tw-flex tw-ml-2' >
             <button onClick={handleShow}
@@ -20,29 +74,37 @@ const PostComments = () => {
                 <Modal.Header closeButton>
                     <Modal.Title> Share Your Thoughts </Modal.Title>
                 </Modal.Header>
-                <Modal.Body className=' tw-max-h-96 tw-overflow-y-auto  ' >
-                    <div className='tw-p-5 tw-shadow-md tw-m-4' >
-                        <div className='tw-flex'>
-                            <img src="" alt="pic" />
-                            <h6 className='tw-pl-2'>username</h6>
-                            
-                        </div>
-                        <p className='tw-ml-3' > Lorem ipsum dolor sit amet consectetur, adipisicing elit. Deserunt Lorem ipsum dolor sit amet consectetur adipisicing elit. Explicabo quos vel nam autem dolore earum deleniti, quisquam aspernatur impedit dolor aut iste reiciendis ipsa non magni repudiandae ratione! Reiciendis, velit! </p>
-                       <div className='tw-w-full tw-justify-end tw-flex'>
-                            <button className='tw-text-right'>
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="tw-size-4">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                                </svg>
-                            </button>
-                       </div>
-                    </div>
+                <Modal.Body className='tw-max-h-96 tw-overflow-y-auto'>
+                    {commments.length !== 0 ?
+                        commments.map(comment => ( // Use map instead of forEach
+                            <div className='tw-p-5 tw-shadow-md tw-m-4' key={comment._id}> {/* Add a unique key prop */}
+                                <div className='tw-flex tw-items-center'>
+                                    <img className='tw-size-12 tw-mb-3 tw-rounded-md' src={`${SERVER_URL}/uploads/${comment.userProfilePic}`} alt="pic" />
+                                    <h6 className='tw-pl-2'>{comment.username}</h6>
+                                </div>
+                                <p className='tw-ml-3'>{comment.comment}</p>
+                                {/* delete button */}
+                                {comment.username == username &&
+                                    <div className='tw-w-full tw-justify-end tw-flex'>
+                                        <button onClick={() => handleRemoveComment(comment._id)} className='tw-text-right'>
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="tw-size-4">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                }
 
+                            </div>
+                        ))
+                        :
+                        <div> No Comments yet !! </div>
+                    }
                 </Modal.Body>
                 <Modal.Footer >
-                    <textarea className='tw-p-3 tw-w-full tw-shadow-md' name="" placeholder='Write Here....' id=""></textarea>
-                    <button className='btn btn-primary mt-3'>Add</button>
-                    <button className='btn btn-danger  mt-3'>Close</button>
+                    <textarea value={comment} onChange={(e) => setComment(e.target.value)} className='tw-p-3 tw-w-full tw-shadow-md' name="" placeholder='Write Here....' id=""></textarea>
+                    <button onClick={() => handleAddComment(postsId)} className='btn btn-primary mt-3'>Add</button>
+                    <button onClick={handleClose} className='btn btn-danger  mt-3'>Close</button>
                 </Modal.Footer>
             </Modal>
 

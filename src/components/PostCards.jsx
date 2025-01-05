@@ -10,7 +10,7 @@ import PostComments from './PostComments';
 
 const PostCards = ({ values }) => {
     
-     console.log(values);
+      
     
     const [show, setShow] = useState(false);
     const { sharedState } = useContext(StateContext);
@@ -66,7 +66,7 @@ const PostCards = ({ values }) => {
                             <div className='tw-flex'>
                                 
                                     <LikeButton postsId={values._id} likes={values.likes} />
-                                    <PostComments/>
+                                    <PostComments postsId={values._id} profilePic={profilePic} commments={values.comments}/>
     
                             </div>
                                 <Link className='tw-my-5' onClick={handleShow}>  Read More</Link>

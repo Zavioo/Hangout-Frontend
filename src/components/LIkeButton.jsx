@@ -4,7 +4,6 @@ import { updatelikeAPI } from '../Services/allApi';
 
 const LikeButton = ({ postsId, likes }) => {
     const numberOfLikes = likes.length;
-    console.log(numberOfLikes); // Output: 3
 
     const user = JSON.parse(sessionStorage.getItem("user"));
     const userId = user._id
@@ -13,9 +12,8 @@ const LikeButton = ({ postsId, likes }) => {
 
 
 
-
     const handleLike = async (id) => {
-        console.log("Post ID:", id);
+    
         const token = sessionStorage.getItem("token")
         if (token) {
 
@@ -27,6 +25,7 @@ const LikeButton = ({ postsId, likes }) => {
                 const result = await updatelikeAPI(id, reqBody, reqHeader);
                 if (result.status === 200) {
                     setPostResponse(result.data);
+                    
                 }
             } catch (error) {
                 console.error('Error liking the post:', error);
