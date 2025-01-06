@@ -7,6 +7,7 @@ import EditPost from './EditPost';
 import RemovePost from './RemovePost';
 import LikeButton from './LIkeButton';
 import PostComments from './PostComments';
+import { PostResponseContext } from '../ContextApi/StateContext';
 
 const PostCards = ({ values }) => {
     
@@ -14,12 +15,14 @@ const PostCards = ({ values }) => {
     
     const [show, setShow] = useState(false);
     const { sharedState } = useContext(StateContext);
-
+    const { setPostResponse } = useContext(PostResponseContext);
+   
 
     const profilePic = values.userId?.profilePic || 'user.jpg'
 
     const handleShow = () => setShow(true);
     const handleClose = () => setShow(false);
+    const handleShowUserProfile = ()=>setPostResponse(values.userId)
 
     const mediaType = values.media.split('.').pop().toLowerCase(); //To Get file extension
 
@@ -30,7 +33,7 @@ const PostCards = ({ values }) => {
         <div className={sharedState === 'Initial State' ? "card tw-max-w-sm tw-max-h-max tw-m-5 tw-ml-8" : "card tw-max-w-xs tw-max-h-fit tw-m-5"}>
             <div className="card-body">
                 <div className="tw-flex tw-items-center tw-shadow-sm tw-p-2 ">
-                    <Link>
+                    <Link to='/profilepage' onClick={handleShowUserProfile}>
                         <img
                             style={{ width: "40px", height: "40px" }}
                             className="rounded"

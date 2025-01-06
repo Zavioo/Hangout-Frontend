@@ -33,8 +33,8 @@ export const updatePostAPI = async (id, reqBody, reqHeader) => {
 }
 
 // userPostRemoveAPI called by removePost component when user click delete button
-export const userPostRemoveAPI =async(id,reqHeader)=>{
-    return await commonApi("DELETE",`${SERVER_URL}/post/${id}/remove`,{},reqHeader)
+export const userPostRemoveAPI = async (id, reqHeader) => {
+    return await commonApi("DELETE", `${SERVER_URL}/post/${id}/remove`, {}, reqHeader)
 }
 // called by lIkeButton component when user click like button
 export const updatelikeAPI = async (id, reqBody, reqHeader) => {
@@ -50,3 +50,7 @@ export const addCommentAPI = async (id, reqBody, reqHeader) => {
 export const removeCommentAPI = async (id, reqBody) => {
     return await commonApi("DELETE", `${SERVER_URL}/post/${id}/removecomments`, reqBody)
 }
+
+export const getUserPostsAPI = async (id) => { 
+    return await commonApi("GET", `${SERVER_URL}/getuserposts/${id}`, {})
+ }

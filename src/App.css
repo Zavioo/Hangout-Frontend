@@ -56,6 +56,15 @@
 
 }
 
+.layout {
+  columns: 4;
+  column-gap: 10px;
+}
+
+.layout button{
+  break-inside: avoid;
+}
+
 
 
 
