@@ -54,3 +54,7 @@ export const removeCommentAPI = async (id, reqBody) => {
 export const getUserPostsAPI = async (id) => { 
     return await commonApi("GET", `${SERVER_URL}/getuserposts/${id}`, {})
  }
+
+ export const updateFriendsAPI = async (id, reqBody, reqHeader) => {
+    return await commonApi("PUT", `${SERVER_URL}/user/${id}/friends`, reqBody, reqHeader)
+}
