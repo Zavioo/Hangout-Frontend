@@ -1,20 +1,19 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { PostResponseContext } from '../ContextApi/StateContext';
+import React, { useEffect, useState } from 'react'
 import SERVER_URL from '../Services/serverURL';
 import { Link } from 'react-router-dom';
 import { getUserPostsAPI, updateFriendsAPI } from '../Services/allApi';
-import { Button } from 'react-bootstrap';
+
 
 
 const ProfilePage = () => {
-    const { postResponse, setPostResponse } = useContext(PostResponseContext);
+    
     const user = JSON.parse(sessionStorage.getItem("user"));
+    const postResponse  = JSON.parse(sessionStorage.getItem("ProfileDetails"));
     const [postDetails, setPostDetails] = useState([])
     const [changeButton, setChangeButton] = useState()
     const [friends, setFriends] = useState([])
     const profilePic = postResponse.profilePic && postResponse.profilePic || 'user.jpg'
     const userId = postResponse._id
-
 
 
     useEffect(() => {
@@ -92,15 +91,12 @@ const ProfilePage = () => {
                                             <button onClick={handleUpdateFriends} type="button" className='tw-mt-2 btn btn-outline-info '>Friends</button>
                                             :
                                             <button onClick={handleUpdateFriends} type="button" className='tw-mt-2 btn btn-info '>Add to Friends</button>
-
                                     }
                                 </div>
                             }
                         </div>
                     </div>
-
                 </div >
-
                 <h2 className='tw-mt-20 tw-border-b-2 tw-pb-5 tw-text-center'>Posts</h2>
                 <div className='tw-flex tw-justify-center tw-mt-10'>
                     <div className='layout'>
@@ -114,8 +110,8 @@ const ProfilePage = () => {
                                             {['mp4', 'mkv'].includes(mediaType) ? (
                                                 <video
                                                     src={`${SERVER_URL}/uploads/${post.media}`}
-                                                    controls // Add controls for video playback
-                                                    style={{ width: '100%', height: 'auto' }} // Optional styling
+                                                    autoPlay
+                                                    style={{ width: '100%', height: 'auto' }} 
                                                 >
                                                     Your browser does not support the video tag.
                                                 </video>
@@ -123,7 +119,7 @@ const ProfilePage = () => {
                                                 <img
                                                     src={`${SERVER_URL}/uploads/${post.media}`}
                                                     alt="Media"
-                                                    style={{ width: '100%', height: 'auto' }} // Optional styling
+                                                    style={{ width: '100%', height: 'auto' }} 
                                                 />
                                             )}
                                         </div>

@@ -22,7 +22,7 @@ const PostCards = ({ values }) => {
 
     const handleShow = () => setShow(true);
     const handleClose = () => setShow(false);
-    const handleShowUserProfile = () => setPostResponse(values.userId)
+    const handleShowUserProfile = () => sessionStorage.setItem("ProfileDetails", JSON.stringify(values.userId))
 
     const mediaType = values.media.split('.').pop().toLowerCase(); //To Get file extension
 
