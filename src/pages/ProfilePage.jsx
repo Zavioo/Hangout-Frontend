@@ -12,6 +12,7 @@ const ProfilePage = () => {
     const [postDetails, setPostDetails] = useState([])
     const [changeButton, setChangeButton] = useState()
     const [friends, setFriends] = useState([])
+    const [isFriends,setIsFriends] = useState([])
     const profilePic = postResponse.profilePic && postResponse.profilePic || 'user.jpg'
     const userId = postResponse._id
 
@@ -38,8 +39,8 @@ const ProfilePage = () => {
 
     const handleUpdateFriends = async () => {
 
-
         const token = sessionStorage.getItem("token")
+        const userProfilePic = profilePic 
 
         if (token) {
 
@@ -47,7 +48,7 @@ const ProfilePage = () => {
                 "Authorization": `Bearer ${token}`
             }
             const id = user._id // current users id
-            const reqBody = { userId } //userId to be added
+            const reqBody = { userId ,userProfilePic} //userId to be added
             console.log("New", id, reqBody);
 
             try {
@@ -63,9 +64,13 @@ const ProfilePage = () => {
             }
         }
     }
+    const userIds = user.friends.map(friend => friend.userId);
+    console.log(userIds);
+    
+    
 
     useEffect(() => {
-        setChangeButton(user.friends.includes(userId) ? true : false)
+        setChangeButton(userIds.includes(userId) ? true : false)
     }, [handleUpdateFriends])
 
     return (
