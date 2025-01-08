@@ -110,7 +110,7 @@ const ProfilePage = () => {
                                     // Determine media type based on the file extension
                                     const mediaType = post.media.split('.').pop().toLowerCase();
                                     return (
-                                        <button key={post._id}>
+                                        <div className='items' key={post._id}>
                                             {['mp4', 'mkv'].includes(mediaType) ? (
                                                 <video
                                                     src={`${SERVER_URL}/uploads/${post.media}`}
@@ -126,7 +126,7 @@ const ProfilePage = () => {
                                                     style={{ width: '100%', height: 'auto' }} // Optional styling
                                                 />
                                             )}
-                                        </button>
+                                        </div>
                                     );
                                 })
                             ) :
