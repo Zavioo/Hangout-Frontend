@@ -90,7 +90,11 @@ const Profile = () => {
       alert("Please fill the form completely!!!")
     }
   }
+
   const user = JSON.parse(sessionStorage.getItem("user"))
+  console.log(user.friends);
+  
+
   const NumOfFriends = user.friends.length;
   return (
 
@@ -123,10 +127,21 @@ const Profile = () => {
       <h6 className='  tw-text-black '> About </h6>
       <div className='tw-mb-4 tw-text-justify tw-max-w-72 tw-max-h-24 tw-overflow-y-auto'>{userDetails.about}</div>
       <h6 className='  tw-text-black tw-mb-4 ' >  Friends  </h6>
-      <div className='  tw-w-full tw-h-52 tw-overflow-y-auto tw-flex-wrap tw-flex tw-gap-4 tw-items-start ' >
+      <div className='tw-grid tw-gap-3 tw-grid-flow-row tw-grid-cols-4 tw-w-full tw-max-h-52 tw-overflow-y-auto ' >
         {/*  to show frinds list */}
-        <Link><img style={{ width: "50px", height: "50px" }} className=" rounded" src=" https://avatarfiles.alphacoders.com/375/thumb-350-375330.webp" alt="Profilepic" /></Link>
-
+        { user.friends.length > 0 &&
+           user.friends.map((user ,index)=>{
+         
+            return(
+             <div style={{ width: "50px", height: "50px" }} key={index}>
+                  <Link to='/profilepage'><img className="rounded" src={`${SERVER_URL}/uploads/${user.userProfilePic}`} alt="Profilepic" /></Link>
+             </div>
+             
+            )
+            
+           })
+         
+        }
       </div>
 
       <Modal show={show} onHide={handleClose} size="" >
