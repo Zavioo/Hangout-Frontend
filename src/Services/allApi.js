@@ -58,3 +58,7 @@ export const getUserPostsAPI = async (id) => {
  export const updateFriendsAPI = async (id, reqBody, reqHeader) => {
     return await commonApi("PUT", `${SERVER_URL}/user/${id}/friends`, reqBody, reqHeader)
 }
+
+export const getFriendsAPI = async (id) => {
+    return await commonApi("GET", `${SERVER_URL}/user/${id}`, {})
+}

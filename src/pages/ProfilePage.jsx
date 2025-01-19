@@ -12,10 +12,10 @@ const ProfilePage = () => {
     const [postDetails, setPostDetails] = useState([])
     const [changeButton, setChangeButton] = useState()
     const [friends, setFriends] = useState([])
-    const [isFriends,setIsFriends] = useState([])
     const profilePic = postResponse.profilePic && postResponse.profilePic || 'user.jpg'
     const userId = postResponse._id
 
+    
 
     useEffect(() => {
         handleGetUserPosts(userId)
@@ -25,8 +25,6 @@ const ProfilePage = () => {
         try {
             const result = await getUserPostsAPI(id);
             if (result.status === 200) {
-
-                console.log(result.data);
                 setPostDetails(result.data)
                 const type = result.data.media.split('.').pop().toLowerCase();
                 setMediaType(type)
@@ -38,37 +36,31 @@ const ProfilePage = () => {
 
 
     const handleUpdateFriends = async () => {
-
         const token = sessionStorage.getItem("token")
-        const userProfilePic = profilePic 
-
         if (token) {
 
             const reqHeader = {
                 "Authorization": `Bearer ${token}`
             }
             const id = user._id // current users id
-            const reqBody = { userId ,userProfilePic} //userId to be added
-            console.log("New", id, reqBody);
+            const reqBody = { userId } //userId to be added to friends
+            // console.log("New", id, reqBody);
 
             try {
                 const result = await updateFriendsAPI(id, reqBody, reqHeader);
                 if (result.status === 200) {
-                    setFriends(result.data)
-                    sessionStorage.setItem("user", JSON.stringify(result.data))
-                    console.log(result.data);
-
+                    setFriends(result.data.friends)
+                    sessionStorage.setItem("user", JSON.stringify(result.data))     
                 }
             } catch (error) {
-                console.error('Error liking the post:', error);
+                console.error('Error adding to friends the post:', error);
             }
         }
     }
-    const userIds = user.friends.map(friend => friend.userId);
-    console.log(userIds);
     
+// to if user in friends list  
+    const userIds = user.friends.map(friend => friend);
     
-
     useEffect(() => {
         setChangeButton(userIds.includes(userId) ? true : false)
     }, [handleUpdateFriends])

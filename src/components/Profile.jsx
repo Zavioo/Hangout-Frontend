@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Modal } from 'react-bootstrap';
-import { Link } from 'react-router-dom'
-import { updateUserAPI } from '../Services/allApi';
+import { getFriendsAPI, updateUserAPI } from '../Services/allApi';
 import userPic from '../assets/user.jpg'
 import SERVER_URL from '../Services/serverURL';
+import { Link } from 'react-router-dom';
 
 
 
@@ -15,8 +15,13 @@ const Profile = () => {
   const [userDetails, setUserDetails] = useState({
     username: "", name: "", email: "", password: "", profilePic: "", about: ""
   })
-
+  const [friends,setFriends] = useState([])
   const [show, setShow] = useState(false);
+  const user = JSON.parse(sessionStorage.getItem("user"))
+  const NumOfFriends = user.friends.length;
+  console.log(user._id);
+  const id = user._id
+
 
 
   useEffect(() => {
@@ -38,8 +43,13 @@ const Profile = () => {
       setPreview("")
     }
   }, [userDetails.profilePic])
+ 
+  useEffect(()=>{
+    handleGetFriends(id)
+  },[])
 
 
+  
   const handleShow = () => setShow(true)
   const handleClose = () => {
     const user = JSON.parse(sessionStorage.getItem("user"))
@@ -50,6 +60,8 @@ const Profile = () => {
     setPreview("")
     setShow(false)
   }
+
+  const handleShowUserProfile = (friends) => sessionStorage.setItem("ProfileDetails", JSON.stringify(friends))
 
   // console.log(existingProfileImg);
 
@@ -91,11 +103,20 @@ const Profile = () => {
     }
   }
 
-  const user = JSON.parse(sessionStorage.getItem("user"))
-  console.log(user.friends);
-  
+  const handleGetFriends = async (id) => {
+    try {
+      const result = await getFriendsAPI(id)
+      if (result.status==200) {
+        setFriends(result.data)
+        
+        
+      }
+    } catch (err) {
+      console.error('Error fetching friends list', err);
+  }
 
-  const NumOfFriends = user.friends.length;
+  }
+
   return (
 
     <div className='tw-flex tw-flex-col tw-items-center '>
@@ -129,19 +150,17 @@ const Profile = () => {
       <h6 className='  tw-text-black tw-mb-4 ' >  Friends  </h6>
       <div className='tw-grid tw-gap-3 tw-grid-flow-row tw-grid-cols-4 tw-w-full tw-max-h-52 tw-overflow-y-auto ' >
         {/*  to show frinds list */}
-        { user.friends.length > 0 &&
-           user.friends.map((user ,index)=>{
-         
-            return(
-             <div style={{ width: "50px", height: "50px" }} key={index}>
-                  <Link to='/profilepage'><img className="rounded" src={`${SERVER_URL}/uploads/${user.userProfilePic}`} alt="Profilepic" /></Link>
-             </div>
-             
-            )
-            
-           })
-         
-        }
+            { friends.length > 0 ?    
+         friends.map((friends,index) => {
+         return( <div style={{ width: "50px", height: "50px" }} key={index}>
+          <Link to='/profilepage' onClick={()=>{handleShowUserProfile(friends)}} ><img className="rounded" src={`${SERVER_URL}/uploads/${friends.profilePic}`} alt="Profilepic" /></Link>
+     </div>)
+      })
+      :
+      
+       <p className='tw-w-64'> No Friends yet</p>
+      
+            }
       </div>
 
       <Modal show={show} onHide={handleClose} size="" >
