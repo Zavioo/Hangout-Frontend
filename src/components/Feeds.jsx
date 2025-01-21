@@ -14,14 +14,15 @@ const Feeds = () => {
     const [allPosts, setAllPosts] = useState([]);
     const [mediaTypes, setMediaTypes] = useState([]); // To store media types
     const user = JSON.parse(sessionStorage.getItem("user"))
-
+    
     useEffect(() => {
         fetchPosts();
     }, [postResponse]);
 
     const fetchPosts = async () => {
+        const searchKey = ""
         try {
-            const result = await allPostAPI();
+            const result = await allPostAPI(searchKey);
             if (result.status === 200) {
                 setAllPosts(result.data);
                 const types = result.data.map((post) =>

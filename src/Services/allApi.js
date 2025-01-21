@@ -23,8 +23,8 @@ export const addPostAPI = async (reqBody, reqHeader) => {
 }
 
 // api Called by Feeds Component 
-export const allPostAPI = async () => {
-    return await commonApi("GET", `${SERVER_URL}/all-posts`, {})
+export const allPostAPI = async (searchKey) => {
+    return await commonApi("GET", `${SERVER_URL}/all-posts?search=${searchKey}`, {})
 }
 
 // to edit posts called by EditPost Component
@@ -51,14 +51,18 @@ export const removeCommentAPI = async (id, reqBody) => {
     return await commonApi("DELETE", `${SERVER_URL}/post/${id}/removecomments`, reqBody)
 }
 
-export const getUserPostsAPI = async (id) => { 
+export const getUserPostsAPI = async (id) => {
     return await commonApi("GET", `${SERVER_URL}/getuserposts/${id}`, {})
- }
+}
 
- export const updateFriendsAPI = async (id, reqBody, reqHeader) => {
+export const updateFriendsAPI = async (id, reqBody, reqHeader) => {
     return await commonApi("PUT", `${SERVER_URL}/user/${id}/friends`, reqBody, reqHeader)
 }
 
 export const getFriendsAPI = async (id) => {
     return await commonApi("GET", `${SERVER_URL}/user/${id}`, {})
+}
+
+export const allUsersAPI = async (searchKey) => {
+    return await commonApi("GET", `${SERVER_URL}/users/all?search=${searchKey}`, {})
 }
