@@ -6,6 +6,7 @@ import Userhome from './pages/Userhome'
 import ProfilePage from './pages/ProfilePage'
 import Chat from './pages/Chat'
 import { Search } from './pages/Search'
+import SavedPost from './pages/SavedPost'
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Route path='/profilepage' element={<ProfilePage />} />
         <Route path='/chats' element={<Chat />} />
         <Route path='/search' element={<Search />} />
+        <Route path='/savedposts' element={<SavedPost />} />
       </Routes>
 
     </>

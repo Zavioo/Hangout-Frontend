@@ -66,3 +66,7 @@ export const getFriendsAPI = async (id) => {
 export const allUsersAPI = async (searchKey) => {
     return await commonApi("GET", `${SERVER_URL}/users/all?search=${searchKey}`, {})
 }
+
+export const updateSavedPostAPI = async (id, reqBody) => {
+    return await commonApi("PUT", `${SERVER_URL}/user/${id}/savepost`, reqBody)
+}

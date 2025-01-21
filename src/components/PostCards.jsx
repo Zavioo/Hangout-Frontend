@@ -8,10 +8,9 @@ import RemovePost from './RemovePost';
 import LikeButton from './LIkeButton';
 import PostComments from './PostComments';
 import { PostResponseContext } from '../ContextApi/StateContext';
+import SavePostBtn from './SavePostBtn';
 
 const PostCards = ({ values }) => {
-
-
 
     const [show, setShow] = useState(false);
     const { sharedState } = useContext(StateContext);
@@ -71,6 +70,7 @@ const PostCards = ({ values }) => {
 
                             <LikeButton postsId={values._id} likes={values.likes} />
                             <PostComments postsId={values._id} profilePic={profilePic} commments={values.comments} />
+                            <SavePostBtn postId={values._id} />
 
                         </div>
                         <Link className='tw-my-5' onClick={handleShow}>  Read More</Link>
