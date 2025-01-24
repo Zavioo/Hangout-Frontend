@@ -70,7 +70,7 @@ const PostCards = ({ values }) => {
 
                             <LikeButton postsId={values._id} likes={values.likes} />
                             <PostComments postsId={values._id} profilePic={profilePic} commments={values.comments} />
-                            <SavePostBtn postId={values._id} />
+                            <SavePostBtn postId={values._id} savedUsers={values.savedUsers} />
 
                         </div>
                         <Link className='tw-my-5' onClick={handleShow}>  Read More</Link>

@@ -2,22 +2,26 @@ import React, { useContext, useEffect, useState } from 'react'
 import { updateSavedPostAPI } from '../Services/allApi';
 import { PostResponseContext } from '../ContextApi/StateContext';
 
-const SavePostBtn = ({ postId, }) => {
+const SavePostBtn = ({ postId, savedUsers}) => {
     const user = JSON.parse(sessionStorage.getItem("user"))
     // console.log(`Post Id : ${postId} User : ${user._id}`);
     const { setPostResponse } = useContext(PostResponseContext);
     const [color, setColor] = useState()
-
+    console.log(savedUsers);
+    
 
     const handleUpdateSavedPost = async () => {
-        const id = user._id
-        const reqBody = { postId }
+        const id = postId
+        const userId = user._id
+        const reqBody = { userId }
 
         try {
+            console.log(id , reqBody);
+            
             const result = await updateSavedPostAPI(id, reqBody)
             if (result.status == 200) {
                 console.log(result.data);
-                sessionStorage.setItem("user", JSON.stringify(result.data))
+                // sessionStorage.setItem("user", JSON.stringify(result.data))
                 setPostResponse(result.data)
             }
         } catch (err) {
@@ -26,7 +30,10 @@ const SavePostBtn = ({ postId, }) => {
     }
 
     useEffect(() => {
-        setColor(user.savedPosts.includes(postId) ? "#14b8a6" : "none")
+        const userID = user._id
+        setColor(savedUsers.includes(userID) ? "#14b8a6" : "none")
+        console.log(`User Id : ${userID}`);
+        
     }, [handleUpdateSavedPost])
 
     return (

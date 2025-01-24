@@ -70,3 +70,7 @@ export const allUsersAPI = async (searchKey) => {
 export const updateSavedPostAPI = async (id, reqBody) => {
     return await commonApi("PUT", `${SERVER_URL}/user/${id}/savepost`, reqBody)
 }
+
+export const getSavedPostAPI = async (id) => {
+    return await commonApi("GET", `${SERVER_URL}/user/${id}/getsavedpost`, {})
+}
