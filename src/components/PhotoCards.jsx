@@ -13,7 +13,7 @@ const PhotoCards = ({ values }) => {
     const handleShow = () => setShow(true);
 
     return (
-        <div   className={sharedState === 'Initial State' ? " tw-max-w-sm tw-max-h-max tw-mx-5 tw-mb-5" : " tw-max-w-xs tw-max-h-fit"} >
+        <div className={sharedState === 'Initial State' ? " tw-max-w-sm tw-max-h-max tw-mx-5 tw-mb-5 tw-mt-20" : " tw-max-w-xs tw-max-h-fit"} >
             {value.map((v, idx) => (
                 <Button key={idx} className=" tw-mx-7 tw-mb-7 btn btn-light" onClick={handleShow}>
                     <img className="rounded" src={`${SERVER_URL}/uploads/${values.media}`} alt="pics" />

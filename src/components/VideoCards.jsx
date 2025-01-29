@@ -13,7 +13,7 @@ const VideoCards = ({values}) => {
   const handleClose = () => setShow(false)
 
   return (
-    <div div className={sharedState === 'Initial State' ? " tw-max-w-sm tw-mx-5 tw-max-h-min tw-mb-5" : " tw-max-w-xs tw-max-h-fit"}>
+    <div div className={sharedState === 'Initial State' ? " tw-max-w-sm tw-mx-5 tw-max-h-min tw-mb-5 tw-mt-20 " : " tw-max-w-xs tw-max-h-fit"}>
       <Button onClick={handleShow} className='btn btn-light'>
         <video width="250" >
           <source src={`${SERVER_URL}/uploads/${values.media}`} type="video/mp4" />

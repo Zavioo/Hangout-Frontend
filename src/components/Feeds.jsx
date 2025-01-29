@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { ActiveTabContext, PostResponseContext,StateContext } from '../ContextApi/StateContext';
+import { ActiveTabContext, PostResponseContext, StateContext } from '../ContextApi/StateContext';
 import Addpost from './Addpost';
 import PostCards from './PostCards';
 import { allPostAPI } from '../Services/allApi';
@@ -8,13 +8,13 @@ import VideoCards from './VideoCards';
 
 
 const Feeds = () => {
-    const {postResponse} = useContext(PostResponseContext)
+    const { postResponse } = useContext(PostResponseContext)
     const { sharedState } = useContext(StateContext);
     const { activeTab } = useContext(ActiveTabContext);
     const [allPosts, setAllPosts] = useState([]);
     const [mediaTypes, setMediaTypes] = useState([]); // To store media types
     const user = JSON.parse(sessionStorage.getItem("user"))
-    
+
     useEffect(() => {
         fetchPosts();
     }, [postResponse]);
@@ -36,7 +36,7 @@ const Feeds = () => {
     };
 
     return (
-        <div className= "tw-grid tw-grid-cols-3">
+        <div className={activeTab === 'videos' ? " tw-flex tw-flex-wrap tw-justify-center tw-items-start " : " tw-grid tw-grid-cols-3 "}>
             {sharedState !== 'Initial State' && <Addpost />}
             {sharedState === 'Initial State' ?
                 allPosts.length > 0 ? (
@@ -59,7 +59,7 @@ const Feeds = () => {
                         const mediaType = mediaTypes[index]; // Match media type with the post
                         if (activeTab === 'all' && post.username === user.username) {
                             return <PostCards key={index} values={post} />;
-                        } 
+                        }
                         else if (['mp4', 'mkv'].includes(mediaType) && activeTab === 'videos' && post.username === user.username) {
                             return <VideoCards key={index} values={post} />;
                         } else if (['png', 'jpeg', 'jpg'].includes(mediaType) && activeTab === 'photos' && post.username === user.username) {

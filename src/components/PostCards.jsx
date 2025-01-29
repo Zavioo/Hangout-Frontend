@@ -29,7 +29,7 @@ const PostCards = ({ values }) => {
 
 
     return (
-        <div className={sharedState === 'Initial State' ? "card tw-max-w-sm tw-max-h-max tw-m-5 tw-ml-8" : "card tw-max-w-xs tw-max-h-fit tw-m-5"}>
+        <div className={sharedState === 'Initial State' ? "card tw-max-w-sm tw-max-h-max tw-m-5 tw-ml-8 tw-mt-24" : "card tw-max-w-xs tw-max-h-fit tw-m-5"}>
             <div className="card-body">
                 <div className="tw-flex tw-items-center tw-shadow-sm tw-p-2 ">
                     <Link to='/profilepage' onClick={handleShowUserProfile}>
@@ -73,7 +73,7 @@ const PostCards = ({ values }) => {
                             <SavePostBtn postId={values._id} savedUsers={values.savedUsers} />
 
                         </div>
-                        <Link className='tw-my-5' onClick={handleShow}>  Read More</Link>
+                        <Link className='readmore tw-my-5 tw-no-underline' onClick={handleShow}>  Read More</Link>
                     </div>
                 }
 

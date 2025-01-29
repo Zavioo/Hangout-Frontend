@@ -17,7 +17,7 @@ const Header = () => {
 
   return (
     <>
-      <div className={sharedState === 'Initial State' ? "tw-grid tw-grid-cols-3 tw-rounded-2xl tw-h-20 tw-mb-8 tw-bg-white " : ' grid-item2 tw-flex tw-justify-around tw-items-center '}>
+      <div className={sharedState === 'Initial State' ? "tw-grid tw-grid-cols-3 tw-rounded-2xl tw-h-20 tw-bg-white tw-fixed tw-w-full tw-z-10" : ' grid-item2 tw-flex tw-justify-around tw-items-center '}>
 
         {sharedState === 'Initial State' &&
           <div className="">
