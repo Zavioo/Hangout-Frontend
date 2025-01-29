@@ -7,7 +7,7 @@ const SavePostBtn = ({ postId, savedUsers}) => {
     // console.log(`Post Id : ${postId} User : ${user._id}`);
     const { setPostResponse } = useContext(PostResponseContext);
     const [color, setColor] = useState()
-    console.log(savedUsers);
+    // console.log(savedUsers);
     
 
     const handleUpdateSavedPost = async () => {
@@ -16,11 +16,11 @@ const SavePostBtn = ({ postId, savedUsers}) => {
         const reqBody = { userId }
 
         try {
-            console.log(id , reqBody);
+            // console.log(id , reqBody);
             
             const result = await updateSavedPostAPI(id, reqBody)
             if (result.status == 200) {
-                console.log(result.data);
+                // console.log(result.data);
                 // sessionStorage.setItem("user", JSON.stringify(result.data))
                 setPostResponse(result.data)
             }
@@ -32,7 +32,7 @@ const SavePostBtn = ({ postId, savedUsers}) => {
     useEffect(() => {
         const userID = user._id
         setColor(savedUsers.includes(userID) ? "#14b8a6" : "none")
-        console.log(`User Id : ${userID}`);
+        // console.log(`User Id : ${userID}`);
         
     }, [handleUpdateSavedPost])
 

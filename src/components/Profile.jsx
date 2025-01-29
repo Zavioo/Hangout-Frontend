@@ -3,7 +3,7 @@ import { Button, Modal } from 'react-bootstrap';
 import { getFriendsAPI, updateUserAPI } from '../Services/allApi';
 import userPic from '../assets/user.jpg'
 import SERVER_URL from '../Services/serverURL';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 
@@ -15,8 +15,9 @@ const Profile = () => {
   const [userDetails, setUserDetails] = useState({
     username: "", name: "", email: "", password: "", profilePic: "", about: ""
   })
-  const [friends,setFriends] = useState([])
+  const [friends, setFriends] = useState([])
   const [show, setShow] = useState(false);
+  const navigate = useNavigate()
   const user = JSON.parse(sessionStorage.getItem("user"))
   const NumOfFriends = user.friends.length;
   console.log(user._id);
@@ -43,13 +44,13 @@ const Profile = () => {
       setPreview("")
     }
   }, [userDetails.profilePic])
- 
-  useEffect(()=>{
+
+  useEffect(() => {
     handleGetFriends(id)
-  },[])
+  }, [])
 
 
-  
+
   const handleShow = () => setShow(true)
   const handleClose = () => {
     const user = JSON.parse(sessionStorage.getItem("user"))
@@ -106,15 +107,21 @@ const Profile = () => {
   const handleGetFriends = async (id) => {
     try {
       const result = await getFriendsAPI(id)
-      if (result.status==200) {
+      if (result.status == 200) {
         setFriends(result.data)
-        
-        
+
+
       }
     } catch (err) {
       console.error('Error fetching friends list', err);
+    }
+
   }
 
+  const handleLogout = () => {
+    sessionStorage.setItem("user", JSON.stringify(""))
+    sessionStorage.setItem("token","")
+    navigate('/login')
   }
 
   return (
@@ -139,7 +146,7 @@ const Profile = () => {
         </svg>
         </button>
         {/* Logout Button */}
-        <button className=' mx-3 btn '> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="tw-size-6 tw-text-black">
+        <button onClick={handleLogout} className=' mx-3 btn '> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="tw-size-6 tw-text-black">
           <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
         </svg>
         </button>
@@ -150,17 +157,17 @@ const Profile = () => {
       <h6 className='  tw-text-black tw-mb-4 ' >  Friends  </h6>
       <div className='tw-grid tw-gap-3 tw-grid-flow-row tw-grid-cols-4 tw-w-full tw-max-h-52 tw-overflow-y-auto ' >
         {/*  to show frinds list */}
-            { friends.length > 0 ?    
-         friends.map((friends,index) => {
-         return( <div style={{ width: "50px", height: "50px" }} key={index}>
-          <Link to='/profilepage' onClick={()=>{handleShowUserProfile(friends)}} ><img className="rounded" src={`${SERVER_URL}/uploads/${friends.profilePic}`} alt="Profilepic" /></Link>
-     </div>)
-      })
-      :
-      
-       <p className='tw-w-64'> No Friends yet</p>
-      
-            }
+        {friends.length > 0 ?
+          friends.map((friends, index) => {
+            return (<div style={{ width: "50px", height: "50px" }} key={index}>
+              <Link to='/profilepage' onClick={() => { handleShowUserProfile(friends) }} ><img className="rounded" src={`${SERVER_URL}/uploads/${friends.profilePic}`} alt="Profilepic" /></Link>
+            </div>)
+          })
+          :
+
+          <p className='tw-w-64'> No Friends yet</p>
+
+        }
       </div>
 
       <Modal show={show} onHide={handleClose} size="" >

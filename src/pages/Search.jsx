@@ -13,7 +13,7 @@ export const Search = () => {
     const [allUsers, setAllUsers] = useState([])
     const [searchKey, setSearchKey] = useState("")
     const { postResponse } = useContext(PostResponseContext)
-    console.log(searchKey);
+    // console.log(searchKey);
 
 
     useEffect(() => {
@@ -40,7 +40,7 @@ export const Search = () => {
             const result = await allUsersAPI(searchKey);
             if (result.status === 200) {
                 setAllUsers(result.data);
-                console.log(allUsers);
+                // console.log(allUsers);
 
             }
         } catch (err) {

@@ -37,7 +37,7 @@ const Chat = () => {
   }, [socket]);
 
   useEffect(() => {
-    console.log(allMessages); // This will log the updated state whenever it changes
+    // console.log(allMessages); // This will log the updated state whenever it changes
   }, [allMessages]);
 
 
@@ -73,7 +73,7 @@ const Chat = () => {
       const result = await fetchMassagesAPI(id);
       if (result.status === 200) {
         setAllMessages(result.data)
-        console.log(result.data);
+        // console.log(result.data);
       }
     } catch (err) {
       console.error('Error fetching massages: ', err);
@@ -86,10 +86,10 @@ const Chat = () => {
     // console.log(reqBody);
     try {
       const result = await openChatAPI(id, reqBody)
-      console.log(reqBody);
+      // console.log(reqBody);
 
       if (result.status === 200) {
-        console.log(result.data);
+        // console.log(result.data);
         setChatId(result.data._id)
 
 
