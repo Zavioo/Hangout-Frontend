@@ -1,17 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { allUsersAPI, createMassageAPI, fetchMassagesAPI, openChatAPI } from '../Services/allApi'
 import SERVER_URL from '../Services/serverURL'
 import io from "socket.io-client";
+import { Link } from 'react-router-dom';
 
 const Chat = () => {
   const [allUsers, setAllUsers] = useState([])
   const [allMessages, setAllMessages] = useState([]);
+  const [top, setTop] = useState("")
   const [open, setOpen] = useState("")
   const [content, setContent] = useState("")
   const [ChatId, setChatId] = useState("")
   const socket = io.connect(SERVER_URL)
   const user = JSON.parse(sessionStorage.getItem("user"))
   const friends = user.friends
+  const messagesEndRef = useRef(null); // Create a ref for the messages container
   // console.log(content);
 
 
@@ -47,6 +50,7 @@ const Chat = () => {
   const handleKeyPress = (event) => {
     if (event.key === 'Enter') {
       handleCreateMassage(); // Call the function when Enter is pressed
+      setTop("")
     }
   };
 
@@ -100,7 +104,7 @@ const Chat = () => {
   const handleCreateMassage = async () => {
     const sender = user._id;
     const reqBody = { sender, content, ChatId };
-
+    setTop("")
     if (content) {
       try {
         const result = await createMassageAPI(reqBody);
@@ -121,6 +125,10 @@ const Chat = () => {
     <div style={{ backgroundColor: "rgb(243, 243, 243)" }} className='tw-grid tw-grid-cols-6 '>
       <div style={{ backgroundColor: "rgb(243, 243, 243)" }} className='tw-col-span-2 tw-p-3 '>
         <div style={{ height: "95vh" }} className='tw-bg-white tw-rounded-2xl tw-h-screen tw-p-5 tw-overflow-y-auto'>
+          <div className='tw-w-full tw-h-16 tw-flex tw-justify-end '> <Link className='' to={'/userhome'}><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="tw-size-8">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+          </svg>
+          </Link> </div>
           {allUsers.length > 0 &&
             allUsers.map((user, index) => (
               friends.includes(user._id) &&
@@ -139,48 +147,61 @@ const Chat = () => {
           allUsers.map((user, index) => (
             open == user._id &&
             <div key={index} style={{ height: "95vh" }} className='tw-relative tw-w-full tw-bg-white tw-rounded-2xl tw-overflow-y-auto'>
-              <div className=' tw-h-3/4 tw-flex tw-flex-col  tw-justify-end tw-p-4 tw-space-y-4'>
+              <div className=' tw-overflow-y-auto tw-h-3/4 tw-flex tw-flex-col  tw-justify-end tw-p-4 tw-space-y-4'>
                 {/* Chat Messages */}
-                {
-                  allMessages.length > 0 &&
-                  allMessages.map((message, index) => (
-                    message.sender == user._id ?
-                      <div key={index} className="tw-flex tw-items-start tw-justify-end">
-                        <div style={{ maxWidth: "60%" }} className='tw-bg-teal-50 tw-rounded-3xl tw-text-gray-800 tw-p-4 tw-shadow-md'>
-                          {message.content}
+                <div className={top == "show" && "tw-overflow-y-auto"}>
+                  {
+                    allMessages.length > 0 &&
+                    allMessages.map((message, index) => (
+                      message.sender == user._id ?
+                        <div key={index} className="tw-flex tw-items-start tw-justify-end">
+                          <div style={{ maxWidth: "60%" }} className='tw-bg-teal-50 tw-rounded-3xl tw-text-gray-800 tw-p-4 tw-shadow-md tw-m-2'>
+                            {message.content}
+                          </div>
                         </div>
-                      </div>
-                      : message.ChatId == ChatId &&
-                      <div key={index} className="tw-flex tw-items-start">
-                        <div style={{ maxWidth: "60%" }} className='tw-bg-teal-500 tw-rounded-3xl tw-text-white tw-p-4 tw-shadow-md'>
-                          {message.content}
+                        : message.ChatId == ChatId &&
+                        <div key={index} className="tw-flex tw-items-start">
+                          <div style={{ maxWidth: "60%" }} className='tw-bg-teal-500 tw-rounded-3xl tw-text-white tw-p-4 tw-shadow-md tw-m-2'>
+                            {message.content}
+                          </div>
                         </div>
-                      </div>
-                  ))
-                }
-
+                    ))
+                  }
+                </div >
 
               </div>
 
               {/* Input Area */}
               <div className='tw-absolute tw-bottom-0 left-0 tw-border tw-border-t-amber-100 tw-w-full tw-flex tw-justify-center tw-items-center tw-p-4 bg-white'>
-                <input onKeyDown={handleKeyPress} value={content} onChange={(e) => { setContent(e.target.value) }}
-                  className='tw-h-10 tw-w-2/3 tw-border tw-p-3 tw-rounded-md tw-mr-2 tw-border-slate-950'
-                  type="text"
-                  placeholder='Write a message'
-                />
-                <button onClick={handleCreateMassage} className='tw-bg-teal-500 tw-text-white tw-rounded-md tw-p-2 hover:tw-bg-teal-600 transition duration-200'>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="tw-w-6 tw-h-6"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
-                  </svg>
-                </button>
+                <div className='tw-w-4/5 tw-justify-center tw-items-center tw-flex'>
+                  <input onKeyDown={handleKeyPress} value={content} onChange={(e) => { setContent(e.target.value) }}
+                    className='tw-h-10 tw-w-2/3 tw-border tw-p-3 tw-rounded-md tw-mr-2 tw-border-slate-950'
+                    type="text"
+                    placeholder='Write a message'
+                  />
+                  <button onClick={handleCreateMassage} className='tw-bg-teal-500 tw-text-white tw-rounded-md tw-p-2 hover:tw-bg-teal-600 transition duration-200'>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="tw-w-6 tw-h-6"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
+                    </svg>
+                  </button>
+                </div>
+                <div className='  tw-justify-end tw-flex'>
+
+                  <button onClick={() => setTop("show")} className='tw-border tw-p-2 tw-shadow-2xl tw-rounded-full hover:tw-text-white  hover:tw-bg-teal-500' >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="tw-size-6">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18" />
+                    </svg>
+
+                  </button>
+
+                </div>
               </div>
             </div>
           ))
