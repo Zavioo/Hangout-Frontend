@@ -1,18 +1,54 @@
 import React, { useEffect, useState } from 'react'
-import { allUsersAPI } from '../Services/allApi'
+import { allUsersAPI, createMassageAPI, fetchMassagesAPI, openChatAPI } from '../Services/allApi'
 import SERVER_URL from '../Services/serverURL'
+import io from "socket.io-client";
 
 const Chat = () => {
   const [allUsers, setAllUsers] = useState([])
+  const [allMessages, setAllMessages] = useState([]);
   const [open, setOpen] = useState("")
+  const [content, setContent] = useState("")
+  const [ChatId, setChatId] = useState("")
+  const socket = io.connect(SERVER_URL)
   const user = JSON.parse(sessionStorage.getItem("user"))
   const friends = user.friends
-  console.log(friends);
+  // console.log(content);
+
+
+
+  useEffect(() => {
+
+    socket.emit('join room', ChatId);
+    fetchAllMassages(ChatId)
+
+
+  }, [ChatId])
+
+  useEffect(() => {
+    socket.on("receive message", (reqBody) => {
+      console.log("Received message:", reqBody); // Check the structure of reqBody
+      setAllMessages((allMessages => [...allMessages, reqBody]));
+
+
+    });
+  }, [socket]);
+
+  useEffect(() => {
+    console.log(allMessages); // This will log the updated state whenever it changes
+  }, [allMessages]);
+
 
 
   useEffect(() => {
     fetchAllUsers()
   }, [])
+
+  // Function to handle key press
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      handleCreateMassage(); // Call the function when Enter is pressed
+    }
+  };
 
   const fetchAllUsers = async () => {
     const searchKey = ""
@@ -20,13 +56,66 @@ const Chat = () => {
       const result = await allUsersAPI(searchKey);
       if (result.status === 200) {
         setAllUsers(result.data);
-        console.log(allUsers);
+        // console.log(allUsers);
       }
     } catch (err) {
       console.error('Error fetching users: ', err);
     }
   }
 
+  const fetchAllMassages = async (ChatId) => {
+    const id = ChatId
+    try {
+      const result = await fetchMassagesAPI(id);
+      if (result.status === 200) {
+        setAllMessages(result.data)
+        console.log(result.data);
+      }
+    } catch (err) {
+      console.error('Error fetching massages: ', err);
+    }
+  }
+
+  const handleChats = async (userId) => {
+    const id = user._id
+    const reqBody = { userId }
+    // console.log(reqBody);
+    try {
+      const result = await openChatAPI(id, reqBody)
+      console.log(reqBody);
+
+      if (result.status === 200) {
+        console.log(result.data);
+        setChatId(result.data._id)
+
+
+      }
+    } catch (err) {
+      console.error('Error opening chat: ', err);
+    }
+
+
+  }
+
+  const handleCreateMassage = async () => {
+    const sender = user._id;
+    const reqBody = { sender, content, ChatId };
+
+    if (content) {
+      try {
+        const result = await createMassageAPI(reqBody);
+        if (result.status === 200) {
+          // Emit the message to the server
+          socket.emit('chat message', reqBody);
+          setContent(""); // Clear the input field
+        }
+      } catch (err) {
+        console.error('Error Creating Message: ', err);
+      }
+    } else {
+      alert("Please write something");
+    }
+  };
 
   return (
     <div style={{ backgroundColor: "rgb(243, 243, 243)" }} className='tw-grid tw-grid-cols-6 '>
@@ -35,7 +124,7 @@ const Chat = () => {
           {allUsers.length > 0 &&
             allUsers.map((user, index) => (
               friends.includes(user._id) &&
-              <div key={index} onClick={() => setOpen(user._id)} className={open == user._id ? 'tw-shadow-inner tw-bg-teal-50 tw-p-2 tw-mb-2 tw-flex tw-items-center' : 'tw-shadow-md tw-p-2 tw-mb-2 tw-flex tw-items-center hover:tw-bg-teal-50 hover:tw-shadow-inner'}>
+              <div key={index} onClick={() => { setOpen(user._id); handleChats(user._id) }} className={open == user._id ? 'tw-shadow-inner tw-bg-teal-50 tw-p-2 tw-mb-2 tw-flex tw-items-center' : 'tw-shadow-md tw-p-2 tw-mb-2 tw-flex tw-items-center hover:tw-bg-teal-50 hover:tw-shadow-inner'}>
                 <img className=' tw-size-12 tw-rounded-md tw-mr-3' src={`${SERVER_URL}/uploads/${user.profilePic}`} alt="profilePic" />
                 <p className='tw-font-normal'>{user.name}</p>
               </div>
@@ -49,42 +138,38 @@ const Chat = () => {
           allUsers.length > 0 &&
           allUsers.map((user, index) => (
             open == user._id &&
-            <div key={index} style={{ height: "95vh" }} className='tw-relative tw-w-full tw-bg-white tw-rounded-2xl'>
-              <div className='tw-overflow-y-auto tw-h-3/4 tw-flex tw-flex-col  tw-justify-end tw-p-4 tw-space-y-4'>
+            <div key={index} style={{ height: "95vh" }} className='tw-relative tw-w-full tw-bg-white tw-rounded-2xl tw-overflow-y-auto'>
+              <div className=' tw-h-3/4 tw-flex tw-flex-col  tw-justify-end tw-p-4 tw-space-y-4'>
                 {/* Chat Messages */}
-                <div className="tw-flex tw-items-start">
-                  <div style={{ maxWidth: "60%" }} className='tw-bg-teal-500 tw-rounded-3xl tw-text-white tw-p-4 tw-shadow-md'>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit
-                  </div>
-                </div>
+                {
+                  allMessages.length > 0 &&
+                  allMessages.map((message, index) => (
+                    message.sender == user._id ?
+                      <div key={index} className="tw-flex tw-items-start tw-justify-end">
+                        <div style={{ maxWidth: "60%" }} className='tw-bg-teal-50 tw-rounded-3xl tw-text-gray-800 tw-p-4 tw-shadow-md'>
+                          {message.content}
+                        </div>
+                      </div>
+                      : message.ChatId == ChatId &&
+                      <div key={index} className="tw-flex tw-items-start">
+                        <div style={{ maxWidth: "60%" }} className='tw-bg-teal-500 tw-rounded-3xl tw-text-white tw-p-4 tw-shadow-md'>
+                          {message.content}
+                        </div>
+                      </div>
+                  ))
+                }
 
-                <div className="tw-flex tw-items-start tw-justify-end">
-                  <div style={{ maxWidth: "60%" }} className='tw-bg-teal-50 tw-rounded-3xl tw-text-gray-800 tw-p-4 tw-shadow-md'>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit
-                  </div>
-                </div>
 
-                <div className="tw-flex tw-items-start">
-                  <div style={{ maxWidth: "60%" }} className='tw-bg-teal-500 tw-rounded-3xl tw-text-white tw-p-4 tw-shadow-md'>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit
-                  </div>
-                </div>
-                
-                <div className="tw-flex tw-items-start tw-justify-end">
-                  <div style={{ maxWidth: "60%" }} className='tw-bg-teal-50 tw-rounded-3xl tw-text-gray-800 tw-p-4 tw-shadow-md'>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit
-                  </div>
-                </div>
               </div>
 
               {/* Input Area */}
               <div className='tw-absolute tw-bottom-0 left-0 tw-border tw-border-t-amber-100 tw-w-full tw-flex tw-justify-center tw-items-center tw-p-4 bg-white'>
-                <input
+                <input onKeyDown={handleKeyPress} value={content} onChange={(e) => { setContent(e.target.value) }}
                   className='tw-h-10 tw-w-2/3 tw-border tw-p-3 tw-rounded-md tw-mr-2 tw-border-slate-950'
                   type="text"
                   placeholder='Write a message'
                 />
-                <button className='tw-bg-teal-500 tw-text-white tw-rounded-md tw-p-2 hover:tw-bg-teal-600 transition duration-200'>
+                <button onClick={handleCreateMassage} className='tw-bg-teal-500 tw-text-white tw-rounded-md tw-p-2 hover:tw-bg-teal-600 transition duration-200'>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"

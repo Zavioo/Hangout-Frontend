@@ -74,3 +74,15 @@ export const updateSavedPostAPI = async (id, reqBody) => {
 export const getSavedPostAPI = async (id) => {
     return await commonApi("GET", `${SERVER_URL}/user/${id}/getsavedpost`, {})
 }
+
+export const openChatAPI = async (id, reqBody) => {
+    return await commonApi("POST", `${SERVER_URL}/user/${id}/openchat`, reqBody)
+}
+
+export const createMassageAPI = async (reqBody) => {
+    return await commonApi("POST", `${SERVER_URL}/user/createmassage`, reqBody)
+}
+
+export const fetchMassagesAPI = async (id) => {
+    return await commonApi("GET", `${SERVER_URL}/user/${id}/fetchallmassages`, {})
+}
